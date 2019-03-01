@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<title>ユーザ管理</title>
+<meta th:include="common/layout.html::head" th:remove="tag"></meta>
+<link rel="stylesheet" th:href="@{/css/page/user.css}" />
+
+<script type="text/javascript">
+/*<![CDATA[*/
+function changeTab(tabname) {
+   // タブメニュー実装
+   document.getElementById('tab1').style.display = 'none';
+   document.getElementById('tab2').style.display = 'none';
+   document.getElementById('tab3').style.display = 'none';
+   // タブメニュー実装
+   document.getElementById(tabname).style.display = 'block';
+}
+window.onload=changeTab('tab1');
+/*]]>*/  
+</script>
+
+<style type="text/css">
+/* ▼ タブメニュー全体の設定 */
+div.tabbox { margin: 15px 0 0 0; padding: 0px; width:600px; height:200px;}
+/* ▼ タブ部分のマージンとパディング領域を設定 */
+p.tabs { margin: 0px; padding: 0px; }
+p.tabs a {
+   /* ▼ リンクをタブのように見せる */
+   display: block; width: 100px; float: left;
+   margin: 0px 3px 0px 0px; padding: 3px;
+   text-align: center;
+   font-size:12px;
+}
+/* ▼ タブごとの配色設定 */
+p.tabs a.tab1 {text-decoration:none; background-color:#fafafa;border-right:1px solid #dcdcdc;border-left:1px solid #dcdcdc;border-top: 3px solid rgba(170, 0, 0, 0.85);  color: #666; font-weight:600;}
+p.tabs a.tab2 {text-decoration:none; background-color:#fafafa;border-right:1px solid #dcdcdc;border-left:1px solid #dcdcdc;border-top: 3px solid rgba(0, 170, 0, 0.85);  color: #666; font-weight:600;}
+p.tabs a.tab3 {text-decoration:none; background-color:#fafafa;border-right:1px solid #dcdcdc;border-left:1px solid #dcdcdc;border-top: 3px solid rgba(0, 0, 170, 0.85);  color: #666; font-weight:600;}
+p.tabs a:hover {opacity:0.7;filter:alpha(opacity=70);}
+/* ▼ タブ中身のボックス */
+div.tab {
+   /* ▼ ボックス共通の装飾 */
+   height: 270px;  clear: left;
+}
+/* ▼ 各ボックスの配色設定 */
+div#tab1 { border: 2px solid #DDD; background-color: #fbfbfb; }
+div#tab2 { border: 2px solid #DDD; background-color: #fbfbfb; }
+div#tab3 { border: 2px solid #DDD; background-color: #fbfbfb; }
+div.tab p { margin: 0.5em; }
+</style>
+</head>
+<body>
+  <div class="wrapper">
+    <header>
+      <div th:include="common/layout :: contentsHeader"></div>
+    </header>
+
+    <div class="container">
+      <div class="side">
+        <div th:include="common/layout :: sideMenu"></div>
+      </div>
+      <div class="main">
+        <div class="top">
+          <p class="tabs">
+            <a href="#tab1" class="tab1"
+              onclick="changeTab('tab1'); return false;">タブ1</a> <a
+              href="#tab2" class="tab2"
+              onclick="changeTab('tab2'); return false;">タブ2</a> <a
+              href="#tab3" class="tab3"
+              onclick="changeTab('tab3'); return false;">タブ3</a>
+          </p>
+          <div id="tab1" class="tab">タブ1の内容です。画像やリンクを含めることもできます。</div>
+
+          <div id="tab2" class="tab">タブ2の内容です。画像やリンクを含めることもできます。</div>
+
+          <div id="tab3" class="tab">タブ3の内容です。画像やリンクを含めることもできます。</div>
+          <div class="boardArea" style="border: #d0d0d0 solid 1px;">
+            <div class="boardTitle">ユーザー登録</div>
+
+            <form th:action="@{/maintenance/user/edit/create}" method="post"
+              th:object="${userCreateForm}">
+              <table>
+                <tr>
+                  <th style="width: 150px; text-align: left;">ユーザーID</th>
+                  <td colspan="3"><input type="text" th:field="*{userid}" />
+                  </td>
+                </tr>
+                <tr>
+                  <th style="width: 150px; text-align: left;">パスワード</th>
+                  <td colspan="3"><input type="text" th:field="*{password}" />
+                  </td>
+                </tr>
+                <tr>
+                  <th style="width: 150px; text-align: left;">ユーザー名</th>
+                  <td colspan="3"><input type="text" th:field="*{username}" />
+                  </td>
+                </tr>
+                <tr>
+                  <th style="width: 150px; text-align: left;">ロール名</th>
+                  <td colspan="3"><input type="text" th:field="*{roleName}" />
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="3">
+                    <ul>
+                      <li th:each="error:${#fields.detailedErrors()}"><span
+                        th:text="${error.message}">Error message</span></li>
+                    </ul>
+                  </td>
+                </tr>
+                <tr>
+                  <th></th>
+                  <td colspan="3" style="float: right;">
+                    <button type="submit">登録</button>
+                  </td>
+                </tr>
+              </table>
+            </form>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <footer>
+      <div th:include="common/layout :: footer"></div>
+    </footer>
+    
+<script type="text/javascript">
+   changeTab('tab1');
+</script>
+  </div>
+</body>
+</html>

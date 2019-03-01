@@ -20,7 +20,7 @@ public class UserSearchForm implements Serializable  {
 	public String roleName;
 	/** 削除済を含む */
 	@NotEmpty
-	public String deleted;
+	public String nonDeleted;
 	public String getUserid() {
 		return userid;
 	}
@@ -39,11 +39,11 @@ public class UserSearchForm implements Serializable  {
 	public void setRoleName(String roleName) {
 		this.roleName = roleName;
 	}
-	public String getDeleted() {
-		return deleted;
+	public String getNonDeleted() {
+		return nonDeleted;
 	}
-	public void setDeleted(String deleted) {
-		this.deleted = deleted;
+	public void setNonDeleted(String nonDeleted) {
+		this.nonDeleted = nonDeleted;
 	}
 
 }

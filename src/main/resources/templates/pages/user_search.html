@@ -29,7 +29,7 @@ window.onload = function () {
       </div>
       <div class="main">
         <div class="top">
-        <form method="get" tu:action="@{/maintenance/user/search}" th:object="${userSearchForm}">
+        <form method="get" action="#" th:action="@{/maintenance/user/search}" th:object="${userSearchForm}">
           <!-- Search Condition Form -->
           <div class="boardArea" style="border: #d0d0d0 solid 1px;">
             <div class="boardTitle">ユーザー検索</div>
@@ -38,12 +38,12 @@ window.onload = function () {
               <tr>
                 <td colspan="3"><input type="text" id="searchUserid" name="userid"
                   th:field="*{userid}" 
-                  placeholder="ユーザID" maxlength="20" size="30" /></td>
+                  placeholder="ユーザID" maxlength="10" size="30" /></td>
               </tr>
               <tr>
                 <td colspan="3"><input type="text" id="searchUsername" name="username"
                   th:field="*{username}" 
-                  placeholder="ユーザ名" maxlength="20" size="30" /></td>
+                  placeholder="ユーザ名" maxlength="100" size="30" /></td>
               </tr>
               <tr>
                 <td colspan="1"><label>権限：</label></td>
@@ -54,11 +54,14 @@ window.onload = function () {
                   value="ADMIN" th:field="*{roleName}">管理者</td>
               </tr>
               <tr>
-                <td colspan="1"><label for="deleted">削除済を除外：</label></td>
-                <td colspan="2"><input type="checkbox" name="deleted" value="true" th:field="*{deleted}" checked="checked"/></td>
+                <td colspan="1"><label for="nonDeleted">削除済を除外：</label></td>
+                <td colspan="2"><input type="checkbox" name="nonDeleted" value="true" th:field="*{nonDeleted}" checked="checked"/></td>
               </tr>
               <tr>
-                <td colspan="3" style="text-align: right;">
+                <td colspan="1" style="text-align: left;">
+                  <a th:href="@{/maintenance/user/edit/new}" >新規登録</a>
+                </td>
+                <td colspan="2" style="text-align: right;">
                   <button type="submit">検索</button>
                 </td>
               </tr>
@@ -100,8 +103,7 @@ window.onload = function () {
                   <td th:text="${user.username}"></td>
                   <td th:text="${user.roleName}"></td>
                   <td th:text="${user.loginFailureCount}"></td>
-                  <td
-                    th:text="${#dates.format(user.loginDenyTime, 'yyyy/MM/dd HH:mm:ss')}"></td>
+                  <td th:text="${#dates.format(user.loginDenyTime, 'yyyy/MM/dd HH:mm:ss')}"></td>
                   <td th:text="${user.deleted}"></td>
                   <td th:text="${user.updaterId}"></td>
                   <td

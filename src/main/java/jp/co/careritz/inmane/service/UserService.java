@@ -40,9 +40,9 @@ public class UserService {
 	 *
 	 * @return メッセージを格納したリスト
 	 */
-	public List<UserDto> find(String userid, String username, String roleName, String deleted) {
+	public List<UserDto> find(String userid, String username, String roleName, String nonDeleted) {
 
-		return dao.select(userid, username, roleName, deleted);
+		return dao.select(userid, username, roleName, nonDeleted);
 	}
 	
 	/**

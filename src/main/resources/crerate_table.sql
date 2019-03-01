@@ -1,5 +1,5 @@
 CREATE TABLE USER_INFO( 
-    USERID              VARCHAR2(5)            NOT NULL
+    USERID              VARCHAR2(10)            NOT NULL
   , PASSWORD            VARCHAR2(60)           NOT NULL
   , USERNAME            VARCHAR2(100)          NOT NULL
   , ROLE_NAME           VARCHAR2(10)           NOT NULL

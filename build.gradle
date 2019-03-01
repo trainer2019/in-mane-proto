@@ -31,8 +31,10 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web-services'
 	
 	// Development
-	runtimeOnly 'com.oracle.jdbc:ojdbc8:12.2.0.1'
-	runtimeOnly 'org.springframework.boot:spring-boot-devtools'
 	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.0.0'
+	runtimeOnly 'org.springframework.boot:spring-boot-devtools'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	
+	// ローカルのJarを使う
+	runtimeOnly files('/Users/masahiro/work-space/common-lib/ojdbc8.jar')
 }

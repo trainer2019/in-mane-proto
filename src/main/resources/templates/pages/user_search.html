@@ -16,6 +16,9 @@ window.onload = function () {
 }
 /*]]>*/  
 </script>
+<style type="text/css">
+
+</style>
 </head>
 <body>
   <div class="wrapper">
@@ -29,48 +32,67 @@ window.onload = function () {
       </div>
       <div class="main">
         <div class="top">
-        <form method="get" action="#" th:action="@{/maintenance/user/search}" th:object="${userSearchForm}">
-          <!-- Search Condition Form -->
-          <div class="boardArea" style="border: #d0d0d0 solid 1px;">
-            <div class="boardTitle">ユーザー検索</div>
-            <!--/* ダイアログメッセージ */-->
-            <table class="search_conditions">
-              <tr>
-                <td colspan="3"><input type="text" id="searchUserid" name="userid"
-                  th:field="*{userid}" 
-                  placeholder="ユーザID" maxlength="10" size="30" /></td>
-              </tr>
-              <tr>
-                <td colspan="3"><input type="text" id="searchUsername" name="username"
-                  th:field="*{username}" 
-                  placeholder="ユーザ名" maxlength="100" size="30" /></td>
-              </tr>
-              <tr>
-                <td colspan="1"><label>権限：</label></td>
-                <td colspan="2"><input id="radioAll" type="radio"
-                  name="roleName" value="" th:field="*{roleName}" checked="checked">全て <input
-                  id="radioUser" type="radio" name="roleName" value="USER" th:field="*{roleName}">ユーザー
-                  <input id="radioAdmin" type="radio" name="roleName"
-                  value="ADMIN" th:field="*{roleName}">管理者</td>
-              </tr>
-              <tr>
-                <td colspan="1"><label for="nonDeleted">削除済を除外：</label></td>
-                <td colspan="2"><input type="checkbox" name="nonDeleted" value="true" th:field="*{nonDeleted}" checked="checked"/></td>
-              </tr>
-              <tr>
-                <td colspan="1" style="text-align: left;">
-                  <a th:href="@{/maintenance/user/edit/new}" >新規登録</a>
-                </td>
-                <td colspan="2" style="text-align: right;">
-                  <button type="submit">検索</button>
-                </td>
-              </tr>
-            </table>
+          <!--/* ▼ タブ表示 */-->
+          <div th:with="tabs  = ${ {'ユーザー検索', 'ユーザー登録'} }, 
+                        paths = ${ {'/maintenance/user/search', '/maintenance/user/edit/new'} },
+                        uri    = ${#httpServletRequest.requestURI}">
+            <!--/* 現在のURIを見て、タブの背景色が変わるようクラスを設定 */-->
+            <p class="tabs" th:each="tabNm, status : ${tabs}">
+              <a href="#" th:class="${#strings.contains(uri, paths[__${status.index}__])} ? 'tab' : 'tab_other'" 
+                th:onclick="'window.location.href=\'' + @{${paths[__${status.index}__]}} + '\''">[[${tabNm}]]</a>
+            </p>
           </div>
-          </form>
-          <!-- End Search Condition Form -->
+          <!--/* ▲ タブ表示 */-->
+          
+          <div class="tab">
+            <!--/* ▼ 検索フォーム */-->
+            <form method="get" action="#"
+              th:action="@{/maintenance/user/search}"
+              th:object="${userSearchForm}">
+              
+              <div class="boardArea" style="border: #d0d0d0 solid 1px;">
+                <table class="search_conditions">
+                  <tr>
+                    <td colspan="3"><input type="text" id="searchUserid"
+                      name="userid" th:field="*{userid}" placeholder="ユーザID"
+                      maxlength="10" size="30" /></td>
+                  </tr>
+                  <tr>
+                    <td colspan="3"><input type="text" id="searchUsername"
+                      name="username" th:field="*{username}" placeholder="ユーザ名"
+                      maxlength="100" size="30" /></td>
+                  </tr>
+                  <tr>
+                    <td colspan="1"><label>権限：</label></td>
+                    <td colspan="2">
+                    <input id="radioAll" type="radio"
+                      name="roleName" value="" th:field="*{roleName}"
+                      checked="checked">全て 
+                    <input id="radioUser"
+                      type="radio" name="roleName" value="USER"
+                      th:field="*{roleName}">ユーザー <input id="radioAdmin"
+                      type="radio" name="roleName" value="ADMIN"
+                      th:field="*{roleName}">管理者
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="1"><label for="nonDeleted">削除済を除外：</label></td>
+                    <td colspan="2"><input type="checkbox" name="nonDeleted"
+                      value="true" th:field="*{nonDeleted}" checked="checked" /></td>
+                  </tr>
+                  <tr>
+                    <td colspan="3" style="text-align: right;">
+                      <button type="submit">検索</button>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </form>
+            <!--/* ▲ 検索結果リスト */-->
+          </div>
         </div>
-
+        
+        <!--/* ▼ 検索結果リスト */-->
         <div class="bottom">
           <div id="count">
             <span th:text="'【検索結果：'+${#lists.size(users)}+'件】'"></span>
@@ -103,7 +125,8 @@ window.onload = function () {
                   <td th:text="${user.username}"></td>
                   <td th:text="${user.roleName}"></td>
                   <td th:text="${user.loginFailureCount}"></td>
-                  <td th:text="${#dates.format(user.loginDenyTime, 'yyyy/MM/dd HH:mm:ss')}"></td>
+                  <td
+                    th:text="${#dates.format(user.loginDenyTime, 'yyyy/MM/dd HH:mm:ss')}"></td>
                   <td th:text="${user.deleted}"></td>
                   <td th:text="${user.updaterId}"></td>
                   <td
@@ -116,6 +139,7 @@ window.onload = function () {
             </div>
           </div>
         </div>
+        <!--/* ▲ 検索結果リスト */-->
       </div>
     </div>
 

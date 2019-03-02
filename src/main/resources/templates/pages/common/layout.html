@@ -76,8 +76,7 @@ function onclickUserName() {
 
   <!-- contentsHeader -->
   <div th:fragment="contentsHeader">
-    <contentsHeader id="contentsHeader">
-    <!-- Logo -->
+    <contentsHeader id="contentsHeader"> <!-- Logo -->
     <div id="logo">
       <a id="nav-link--features" href="/in-mane/top"
         style="text-decoration: none; color: black;"> <img
@@ -86,8 +85,7 @@ function onclickUserName() {
         style="vertical-align: middle; padding-left: 5px; font-size: 22px;"><b>-稼働状況管理-</b></span>
       </a>
     </div>
-    <!-- End Logo -->
-    <!-- Modalダイアログ -->
+    <!-- End Logo --> <!-- Modalダイアログ -->
     <div id="modalDialog" class="modal">
       <!-- Modal content -->
       <div class="modal-content">
@@ -119,49 +117,38 @@ function onclickUserName() {
     </div>
     <!-- End Navigation --> </contentsHeader>
   </div>
-  <!-- End contentsHeader -->
-  <!-- contents -->
+  <!-- End contentsHeader --> <!-- contents -->
   <div layout:fragment="contents"></div>
   <!-- End contents --> <!-- Side Menu -->
   <div th:fragment="sideMenu">
     <sideMenu id="sideMenu">
-    <ul id="menu" style="list-style: none; padding: 15px;"
-      th:with="url=${#httpServletRequest.requestURI}">
+    <div 
+       th:with="menus = ${ {'Top', '稼働状況', 'スタッフ情報', '案件情報', '取引先情報', 'ユーザー管理'} }, 
+                paths = ${ {'__@{/top}__',
+                            '__@{/assign}__',
+                            '__@{/staff}__',
+                            '__@{/project}__',
+                            '__@{/client}__',
+                            '__@{/maintenance/user/}__'
+                         } },
+                toPaths = ${ {'__@{/top}__',
+                            '__@{/assign}__',
+                            '__@{/staff}__',
+                            '__@{/project}__',
+                            '__@{/client}__',
+                            '__@{/maintenance/user/search}__'
+                         } },
+                uri   = ${#httpServletRequest.requestURI}">
+    <ul id="menu" class="menuLists" th:each="menu, status : ${menus}">
       <li
-        th:with="bg=${#strings.contains(url, '/in-mane/top')} ? 'background-color:#dda0dd;' : '' ">
-        <a th:href="@{/top}" class="menuLists"
-        th:style="${bg} + 'color: #ffffff; padding: 2px 15px 2px 15px;'">Top</a>
-      </li>
-      <li
-        th:with="bg=${#strings.contains(url, '/in-mane/assign')} ? 'background-color:#dda0dd;' : '' ">
-        <a th:href="@{/assign}" class="menuLists"
-        th:style="${bg} + 'color: #ffffff; padding: 2px 15px 2px 15px;'">稼働状況</a>
-      </li>
-      <li
-        th:with="bg=${#strings.contains(url, '/in-mane/staff')} ? 'background-color:#dda0dd;' : '' ">
-        <a th:href="@{/staff}" class="menuLists"
-        th:style="${bg} + 'color: #ffffff; padding: 2px 15px 2px 15px;'">スタッフ情報</a>
-      </li>
-      <li
-        th:with="bg=${#strings.contains(url, '/in-mane/project')} ? 'background-color:#dda0dd;' : '' ">
-        <a th:href="@{/project}" class="menuLists"
-        th:style="${bg} + 'color: #ffffff; padding: 2px 15px 2px 15px;'">案件情報</a>
-      </li>
-      <li
-        th:with="bg=${#strings.contains(url, '/in-mane/client')} ? 'background-color:#dda0dd;' : '' ">
-        <a th:href="@{/client}" class="menuLists"
-        th:style="${bg} + 'color: #ffffff; padding: 2px 15px 2px 15px;'">取引先情報</a>
-      </li>
-      <li
-        th:with="bg=${#strings.contains(url, '/in-mane/maintenance/user')} ? 'background-color:#dda0dd;' : '' ">
-        <a th:href="@{/maintenance/user/top}" class="menuLists"
-        th:style="${bg} + 'color: #ffffff; padding: 2px 15px 2px 15px;'">ユーザー管理</a>
+        th:with="bg=${#strings.contains(uri, paths[__${status.index}__])} ? 'background-color:#dda0dd;' : '' ">
+        <a th:href="${toPaths[__${status.index}__]}" class="menuList" th:style="${bg}">[[${menu}]]</a>
       </li>
     </ul>
+    </div>
     </sideMenu>
   </div>
-  <!-- End Side Menu -->
-  <!-- Footer -->
+  <!-- End Side Menu --> <!-- Footer -->
   <div th:fragment="footer">
     <footer id="footer">
       <div>

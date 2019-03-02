@@ -55,7 +55,58 @@ footer {
   }
 }
 
+/* タブメニュー全体の設定 */
+div.tabbox {
+  margin: 15px 0 0 0;
+  padding: 0px;
+  width: 600px;
+  height: 200px;
+}
+/* タブ部分のマージンとパディング領域を設定 */
+p.tabs {
+  margin: 0px;
+  padding: 0px;
+}
 
+p.tabs a {
+  /* リンクをタブのように見せる */
+  display: block;
+  width: 100px;
+  float: left;
+  margin: 0px 3px 0px 0px;
+  padding: 3px;
+  text-align: center;
+  font-size: 12px;
+}
+/* タブごとの配色設定 */
+p.tabs a.tab,
+p.tabs a.tab_other {
+  text-decoration: none;
+  background-color: #fafafa;
+  border-right: 1px solid #dcdcdc;
+  border-left: 1px solid #dcdcdc;
+  color: #666;
+  font-weight: 600;
+}
+
+p.tabs a.tab {
+  border-top: 3px solid rgba(0, 0, 170, 0.85);
+  border-bottom: 2px solid #fafafa;
+  margin-bottom: -2px;
+}
+
+p.tabs a.tab_other {
+  border-top: 3px solid #dcdcdc;
+}
+
+p.tabs a.tab_other:hover {
+  opacity: 0.7;
+  filter: alpha(opacity = 70);
+}
+/* タブ中身のボックス */
+div.tab {
+  clear: left;
+}
 /* *************** */
 
 div#logo{
@@ -79,11 +130,19 @@ div#anavBar{
   height:100%;
   white-space: nowrap;
 }
-.menuLists {
+.menuList {
   color:#ffffff;
   text-decoration: none;
   text-align:left;
+  color: #ffffff;
+  padding: 2px 15px 2px 15px;
 }
+
+.menuLists {
+  list-style: none;
+  padding-left: 3px;
+}
+
 
 .boardTitle {
   box-sizing: border-box;

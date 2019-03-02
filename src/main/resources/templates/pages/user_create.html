@@ -5,21 +5,6 @@
 <title>ユーザ管理</title>
 <meta th:include="common/layout.html::head" th:remove="tag"></meta>
 <link rel="stylesheet" th:href="@{/css/page/user.css}" />
-
-<script type="text/javascript">
-/*<![CDATA[*/
-function changeTab(tabname) {
-   // タブメニュー実装
-   document.getElementById('tab1').style.display = 'none';
-   document.getElementById('tab2').style.display = 'none';
-   document.getElementById('tab3').style.display = 'none';
-   // タブメニュー実装
-   document.getElementById(tabname).style.display = 'block';
-}
-window.onload=changeTab('tab1');
-/*]]>*/  
-</script>
-
 <style type="text/css">
 /* ▼ タブメニュー全体の設定 */
 div.tabbox { margin: 15px 0 0 0; padding: 0px; width:600px; height:200px;}
@@ -61,65 +46,75 @@ div.tab p { margin: 0.5em; }
       </div>
       <div class="main">
         <div class="top">
-          <p class="tabs">
-            <a href="#tab1" class="tab1"
-              onclick="changeTab('tab1'); return false;">タブ1</a> <a
-              href="#tab2" class="tab2"
-              onclick="changeTab('tab2'); return false;">タブ2</a> <a
-              href="#tab3" class="tab3"
-              onclick="changeTab('tab3'); return false;">タブ3</a>
-          </p>
-          <div id="tab1" class="tab">タブ1の内容です。画像やリンクを含めることもできます。</div>
-
-          <div id="tab2" class="tab">タブ2の内容です。画像やリンクを含めることもできます。</div>
-
-          <div id="tab3" class="tab">タブ3の内容です。画像やリンクを含めることもできます。</div>
-          <div class="boardArea" style="border: #d0d0d0 solid 1px;">
-            <div class="boardTitle">ユーザー登録</div>
-
-            <form th:action="@{/maintenance/user/edit/create}" method="post"
-              th:object="${userCreateForm}">
-              <table>
-                <tr>
-                  <th style="width: 150px; text-align: left;">ユーザーID</th>
-                  <td colspan="3"><input type="text" th:field="*{userid}" />
-                  </td>
-                </tr>
-                <tr>
-                  <th style="width: 150px; text-align: left;">パスワード</th>
-                  <td colspan="3"><input type="text" th:field="*{password}" />
-                  </td>
-                </tr>
-                <tr>
-                  <th style="width: 150px; text-align: left;">ユーザー名</th>
-                  <td colspan="3"><input type="text" th:field="*{username}" />
-                  </td>
-                </tr>
-                <tr>
-                  <th style="width: 150px; text-align: left;">ロール名</th>
-                  <td colspan="3"><input type="text" th:field="*{roleName}" />
-                  </td>
-                </tr>
-                <tr>
-                  <td colspan="3">
-                    <ul>
-                      <li th:each="error:${#fields.detailedErrors()}"><span
-                        th:text="${error.message}">Error message</span></li>
-                    </ul>
-                  </td>
-                </tr>
-                <tr>
-                  <th></th>
-                  <td colspan="3" style="float: right;">
-                    <button type="submit">登録</button>
-                  </td>
-                </tr>
-              </table>
-            </form>
+          <!--/* ▼ タブ表示 */-->
+          <div th:with="tabs  = ${ {'ユーザー検索', 'ユーザー登録'} }, 
+                        paths = ${ {'/maintenance/user/search', '/maintenance/user/edit/new'} },
+                        uri    = ${#httpServletRequest.requestURI}">
+            <!--/* 現在のURIを見て、タブの背景色が変わるようクラスを設定 */-->
+            <p class="tabs" th:each="tabNm, status : ${tabs}">
+              <a href="#" th:class="${#strings.contains(uri, paths[__${status.index}__])} ? 'tab' : 'tab_other'" 
+                th:onclick="'window.location.href=\'' + @{${paths[__${status.index}__]}} + '\''">[[${tabNm}]]</a>
+            </p>
+          </div>
+          <!--/* ▲ タブ表示 */-->
+          
+          <div class="tab">
+            <div class="boardArea" style="border: #d0d0d0 solid 1px;">
+              <form th:action="@{/maintenance/user/create}" method="post"
+                th:object="${userCreateForm}">
+                <table>
+                  <tr>
+                    <td style="width: 150px; text-align: left; padding: 5px;">ユーザーID</td>
+                    <td colspan="3">
+                      <input type="text" th:field="*{userid}" size="15" maxlength="10" placeholder="半角英数字10文字" />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="width: 150px; text-align: left; padding: 5px;">パスワード</td>
+                    <td colspan="3"><label>※自動で発行されます</label></td>
+                  </tr>
+                  <tr>
+                    <td style="width: 150px; text-align: left; padding: 5px;">ユーザー名</td>
+                    <td colspan="3"><input type="text" th:field="*{username}" size="30" placeholder="全角１～２0文字" /></td>
+                  </tr>
+                  <tr>
+                    <td style="width: 150px; text-align: left; padding: 5px;">権限</td>
+                    <td colspan="3">
+                      <input id="radioUser"
+                        type="radio" name="roleName" value="USER"
+                        th:field="*{roleName}" checked="checked">ユーザー
+                      <input id="radioAdmin"
+                        type="radio" name="roleName" value="ADMIN"
+                        th:field="*{roleName}">管理者
+                    </td>
+                  </tr>
+                  <!--/*
+                  <tr>
+                    <td style="width: 150px; text-align: left; padding: 5px;">メールアドレス</td>
+                    <td colspan="3"><input type="text" th:field="*{email}" />
+                    </td>
+                  </tr>
+                  */-->
+                  <tr>
+                    <td colspan="3">
+                      <ul>
+                        <li th:each="error:${#fields.detailedErrors()}"><span
+                          th:text="${error.message}">Error message</span></li>
+                      </ul>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th></th>
+                    <td colspan="3" style="float: right;">
+                      <button type="submit">登録</button>
+                    </td>
+                  </tr>
+                </table>
+              </form>
+            </div>
           </div>
         </div>
       </div>
-
     </div>
 
     <footer>

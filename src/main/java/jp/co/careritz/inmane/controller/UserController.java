@@ -21,16 +21,6 @@ public class UserController extends AbstractAppController {
 	@Autowired
 	UserService userService;
 	
-	@GetMapping("top")
-	public String top(Model model) {
-		String userid = "";
-		String username = "";
-		String roleName = "";
-		String nonDeleted = "true";
-		
-		return this.search(userid, username, roleName, nonDeleted, model);
-	}
-	
 	@GetMapping("search")
 	public String search(
 			@RequestParam(name = "userid", defaultValue = "") String userid,

@@ -65,18 +65,18 @@ div.tab p { margin: 0.5em; }
         <div class="top">
           <p class="tabs">
             <a href="#tab1" class="tab1"
-              onclick="changeTab('tab1'); return false;">タブ1</a> <a
+              onclick="changeTab('tab1'); return false;">ユーザー検索</a> <a
               href="#tab2" class="tab2"
-              onclick="changeTab('tab2'); return false;">タブ2</a> <a
+              onclick="changeTab('tab2'); return false;">ユーザー登録</a> <a
               href="#tab3" class="tab3"
               onclick="changeTab('tab3'); return false;">タブ3</a>
           </p>
           <div id="tab1" class="tab">
-          
+            <div th:include="user_search :: search"></div>
           </div>
 
           <div id="tab2" class="tab">
-          
+            <div th:include="user_create :: create"></div>
           </div>
 
           <div id="tab3" class="tab">

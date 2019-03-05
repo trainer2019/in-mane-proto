@@ -39,9 +39,11 @@ abstract public class AbstractAppController {
 		// セッションからユーザ情報を取得
 		SecurityUserModel user = getSessionUser();
 		String userName = user != null ? user.getUsername() : "anonymousUser";
+		String userRole = user != null ? user.getRoleName() : "NONE";
 		
 		// ログインユーザ名
 		model.addAttribute("sessionUserName", userName);
+		model.addAttribute("sessionUserRole", userRole);
 	}
 	
 	

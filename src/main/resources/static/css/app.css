@@ -241,3 +241,10 @@ div#anavBar{
   text-decoration: none;
   cursor: pointer;
 }
+
+/* 必須マーク */
+.required:after {
+  color: #E00;
+  font-weight:bold;
+  content: " *";
+}

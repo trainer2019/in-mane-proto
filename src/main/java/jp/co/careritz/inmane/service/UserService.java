@@ -50,8 +50,13 @@ public class UserService {
 	 *
 	 * @param userDto メッセージを格納したリスト
 	 */
-	public void updateByPk(UserDto userDto) {
+	public int updateByPk(UserDto dto) {
 
-		dao.update(userDto);
+		return dao.update(dto);
+	}
+
+	public int create(UserDto dto) {
+
+		return dao.create(dto);
 	}
 }

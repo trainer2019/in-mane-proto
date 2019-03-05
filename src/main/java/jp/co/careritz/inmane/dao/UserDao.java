@@ -209,7 +209,7 @@ public class UserDao extends BaseDao {
 		return users;
 	}
 	
-	public void update(UserDto dto) {
+	public int update(UserDto dto) {
 		String DRIVER_NAME = this.getDriverName();
 		String JDBC_URL    = this.getJdbcUrl();
 		String USER_ID     = this.getDsUsername();
@@ -228,12 +228,17 @@ public class UserDao extends BaseDao {
 			StringBuilder sqlBuilder = new StringBuilder();
 			sqlBuilder.append("UPDATE USER_INFO ");
 			sqlBuilder.append("SET ");
-			sqlBuilder.append(" LOGIN_FAILURE_COUNT = ? ");
+			if (dto.getPassword() == null && !dto.getPassword().equals("")) {
+				sqlBuilder.append(" PASSWORD = ? ");
+			}
+			sqlBuilder.append(",USERNAME = ? ");
+			sqlBuilder.append(",ROLE_NAME = ? ");
+			sqlBuilder.append(",LOGIN_FAILURE_COUNT = ? ");
 			sqlBuilder.append(",LOGIN_DENY_TIME = ? ");
+			sqlBuilder.append(",DELETED = ? ");
 			sqlBuilder.append(",UPDATER_ID = ? ");
 			sqlBuilder.append(",UPDATE_TIME = ? ");
-			sqlBuilder.append("WHERE userid = ? ");
-			sqlBuilder.append("AND deleted = ? ");
+			sqlBuilder.append("WHERE USERID = ? ");
 			
 			System.out.println("### SQL:" + sqlBuilder.toString());
 			
@@ -245,18 +250,35 @@ public class UserDao extends BaseDao {
 			ps = con.prepareStatement(sqlBuilder.toString());
 			
 			// 各項目値をバインド
-			ps.setInt   (1, dto.getLoginFailureCount());
-			ps.setDate  (2, dto.getLoginDenyTime());
-			ps.setString(3, dto.getUpdaterId());
-			ps.setDate  (4, dto.getUpdateTime());
-			ps.setString(5, dto.getUserid());
-			ps.setInt   (6, 0);
+			// 各項目値をバインド
+			ps.setString(1, dto.getUserid());
+			ps.setString(2, dto.getPassword());
+			ps.setString(3, dto.getUsername());
+			ps.setString(4, dto.getRoleName());
+			ps.setInt   (5, 0);
+			ps.setDate  (6, null);
+			ps.setInt   (7, 0);
+			ps.setString(8, null);
+			ps.setDate  (9, null);
+			ps.setString(10, dto.getUserid());
+			ps.setDate  (11, new Date(System.currentTimeMillis()));
 
 			// SQLを実行
 			ps.executeUpdate();
-			
-		} catch (SQLException | ClassNotFoundException e) {
+		} catch (SQLException e) {
+			int errCode = e.getErrorCode();
 			e.printStackTrace();
+			System.out.println("SQLException#getErrorCode = " + errCode);
+			if (errCode == 1) {
+				System.out.println("一意制約エラー");
+				return 1;
+			} else {
+				return 9;
+			}
+			
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+			return 9;
 		} finally {
 			try {
 				if (ps != null) {
@@ -271,6 +293,108 @@ public class UserDao extends BaseDao {
 				e.printStackTrace();
 			}
 		}
+		return 0;
+	}
+
+
+	public int create(UserDto dto) {
+		String DRIVER_NAME = this.getDriverName();
+		String JDBC_URL    = this.getJdbcUrl();
+		String USER_ID     = this.getDsUsername();
+		String USER_PASS   = this.getDsPassword();
+		
+		Connection con = null;
+		PreparedStatement ps = null;
+		
+		// DBとの接続を行う
+		try {
+			System.out.println("### driverName:" + DRIVER_NAME);
+			System.out.println("### jdbcUrl:" + JDBC_URL);
+			System.out.println("### userId:" + USER_ID);
+			System.out.println("### userPass:" + USER_PASS);
+			
+			StringBuilder sqlBuilder = new StringBuilder();
+			sqlBuilder.append("INSERT INTO USER_INFO (");
+			sqlBuilder.append(" USERID ");
+			sqlBuilder.append(",PASSWORD ");
+			sqlBuilder.append(",USERNAME ");
+			sqlBuilder.append(",ROLE_NAME ");
+			sqlBuilder.append(",LOGIN_FAILURE_COUNT ");
+			sqlBuilder.append(",LOGIN_DENY_TIME ");
+			sqlBuilder.append(",DELETED ");
+			sqlBuilder.append(",UPDATER_ID ");
+			sqlBuilder.append(",UPDATE_TIME ");
+			sqlBuilder.append(",CREATER_ID ");
+			sqlBuilder.append(",CREATE_TIME ");
+			sqlBuilder.append(") VALUES (");
+			sqlBuilder.append(" ? ");
+			sqlBuilder.append(",? ");
+			sqlBuilder.append(",? ");
+			sqlBuilder.append(",? ");
+			sqlBuilder.append(",? ");
+			sqlBuilder.append(",? ");
+			sqlBuilder.append(",? ");
+			sqlBuilder.append(",? ");
+			sqlBuilder.append(",? ");
+			sqlBuilder.append(",? ");
+			sqlBuilder.append(",? ");
+			sqlBuilder.append(") ");
+
+			
+			System.out.println("### SQL:" + sqlBuilder.toString());
+			
+			// JDBCドライバのロード
+			Class.forName(DRIVER_NAME);
+			// DBとの接続を行う
+			con = DriverManager.getConnection(JDBC_URL, USER_ID, USER_PASS);
+			
+			ps = con.prepareStatement(sqlBuilder.toString());
+			
+			// 各項目値をバインド
+			ps.setString(1, dto.getUserid());
+			ps.setString(2, dto.getPassword());
+			ps.setString(3, dto.getUsername());
+			ps.setString(4, dto.getRoleName());
+			ps.setInt   (5, 0);
+			ps.setDate  (6, null);
+			ps.setInt   (7, 0);
+			ps.setString(8, null);
+			ps.setDate  (9, null);
+			ps.setString(10, dto.getUserid());
+			ps.setDate  (11, new Date(System.currentTimeMillis()));
+
+			// SQLを実行
+			ps.executeUpdate();
+			
+		} catch (SQLException e) {
+			int errCode = e.getErrorCode();
+			e.printStackTrace();
+			System.out.println("SQLException#getErrorCode = " + errCode);
+			if (errCode == 1) {
+				System.out.println("一意制約エラー");
+				return 1;
+			} else {
+				return 9;
+			}
+			
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+			return 9;
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+					ps = null;
+				}
+				if (con != null) {
+					con.close();
+					con = null;
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return 0;
 	}
 
 

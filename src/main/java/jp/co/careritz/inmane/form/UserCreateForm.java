@@ -3,18 +3,29 @@ package jp.co.careritz.inmane.form;
 import java.io.Serializable;
 import java.sql.Date;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+
 public class UserCreateForm implements Serializable {
 
 	/** シリアルバージョンUID */
 	private static final long serialVersionUID = 1L;
 
 	/** ユーザID */
+	@NotEmpty(message="必須入力の項目です。")
+	@Pattern(regexp="[a-zA-Z0-9]*", message="半角英数字である必要があります。")
 	private String userid;
 	/** パスワード */
+	@Pattern(regexp="[a-zA-Z0-9]*", message="半角英数字である必要があります。")
 	private String password;
 	/** ユーザ名 */
+	@Size(min = 1, max = 20, message="{min}文字以上{max}文字以下で入力してください。")
 	private String username;
 	/** ロール名 */
+	@NotEmpty(message="必須入力の項目です。")
+	@Pattern(regexp = "USER|ADMIN")
 	private String roleName;
 	/** ログイン失敗回数 */
 	private int loginFailureCount;

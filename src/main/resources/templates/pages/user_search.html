@@ -33,15 +33,7 @@ window.onload = function () {
       <div class="main">
         <div class="top">
           <!--/* ▼ タブ表示 */-->
-          <div th:with="tabs  = ${ {'ユーザー検索', 'ユーザー登録'} }, 
-                        paths = ${ {'/maintenance/user/search', '/maintenance/user/edit/new'} },
-                        uri    = ${#httpServletRequest.requestURI}">
-            <!--/* 現在のURIを見て、タブの背景色が変わるようクラスを設定 */-->
-            <p class="tabs" th:each="tabNm, status : ${tabs}">
-              <a href="#" th:class="${#strings.contains(uri, paths[__${status.index}__])} ? 'tab' : 'tab_other'" 
-                th:onclick="'window.location.href=\'' + @{${paths[__${status.index}__]}} + '\''">[[${tabNm}]]</a>
-            </p>
-          </div>
+          <div th:include="user_layout :: tabs"></div>
           <!--/* ▲ タブ表示 */-->
           
           <div class="tab">
@@ -105,14 +97,9 @@ window.onload = function () {
                   <th>ユーザID</th>
                   <th>ユーザ名</th>
                   <th>権限</th>
-                  <th>ログイン失敗数</th>
-                  <th>ログイン拒否日時</th>
                   <th>削除</th>
-                  <th>最終更新者</th>
                   <th>最終更新日時</th>
-                  <th>登録者</th>
                   <th>登録日時</th>
-                  <th></th>
                 </tr>
               </table>
             </div>
@@ -121,17 +108,14 @@ window.onload = function () {
               <table class="t" name="tData">
                 <tr th:if="user" th:each="user, userStat:${users}">
                   <td th:text="${userStat.count}"></td>
-                  <td th:text="${user.userid}"></td>
+                  <td>
+                    <a th:href="@{'/maintenance/user/detail?userid=' + ${user.userid}}">[[${user.userid}]]</a>
+                  </td>
                   <td th:text="${user.username}"></td>
                   <td th:text="${user.roleName}"></td>
-                  <td th:text="${user.loginFailureCount}"></td>
-                  <td
-                    th:text="${#dates.format(user.loginDenyTime, 'yyyy/MM/dd HH:mm:ss')}"></td>
-                  <td th:text="${user.deleted}"></td>
-                  <td th:text="${user.updaterId}"></td>
+                  <td>[[${user.deleted==1} ? '済' : '']]</td>
                   <td
                     th:text="${#dates.format(user.updateTime, 'yyyy/MM/dd HH:mm:ss')}"></td>
-                  <td th:text="${user.createrId}"></td>
                   <td
                     th:text="${#dates.format(user.createTime, 'yyyy/MM/dd HH:mm:ss')}"></td>
                 </tr>

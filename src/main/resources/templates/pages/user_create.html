@@ -5,34 +5,35 @@
 <title>ユーザ管理</title>
 <meta th:include="common/layout.html::head" th:remove="tag"></meta>
 <link rel="stylesheet" th:href="@{/css/page/user.css}" />
-<style type="text/css">
-/* ▼ タブメニュー全体の設定 */
-div.tabbox { margin: 15px 0 0 0; padding: 0px; width:600px; height:200px;}
-/* ▼ タブ部分のマージンとパディング領域を設定 */
-p.tabs { margin: 0px; padding: 0px; }
-p.tabs a {
-   /* ▼ リンクをタブのように見せる */
-   display: block; width: 100px; float: left;
-   margin: 0px 3px 0px 0px; padding: 3px;
-   text-align: center;
-   font-size:12px;
+<script type="text/javascript">
+/*<![CDATA[*/
+function pwCheckOnchangeHandler() {
+  console.info('#### ');
+  const pw = document.getElementById("password");
+  const pwCheck = document.getElementById("password-check");
+  
+  if(pwCheck.checked) {
+      pw.setAttribute("type", "text");
+  } else {
+      pw.setAttribute("type", "password");
+  }
 }
-/* ▼ タブごとの配色設定 */
-p.tabs a.tab1 {text-decoration:none; background-color:#fafafa;border-right:1px solid #dcdcdc;border-left:1px solid #dcdcdc;border-top: 3px solid rgba(170, 0, 0, 0.85);  color: #666; font-weight:600;}
-p.tabs a.tab2 {text-decoration:none; background-color:#fafafa;border-right:1px solid #dcdcdc;border-left:1px solid #dcdcdc;border-top: 3px solid rgba(0, 170, 0, 0.85);  color: #666; font-weight:600;}
-p.tabs a.tab3 {text-decoration:none; background-color:#fafafa;border-right:1px solid #dcdcdc;border-left:1px solid #dcdcdc;border-top: 3px solid rgba(0, 0, 170, 0.85);  color: #666; font-weight:600;}
-p.tabs a:hover {opacity:0.7;filter:alpha(opacity=70);}
-/* ▼ タブ中身のボックス */
-div.tab {
-   /* ▼ ボックス共通の装飾 */
-   height: 270px;  clear: left;
+function showMsg() {
+  const msgEl = document.getElementById("appCompleteMessage");
+  const msg = msgEl.value;
+  console.info(msg);
+  if (msg) msgModal(msg);
+  
+  const pw = document.getElementById("password");
+  const pwCheck = document.getElementById("password-check");
+  if (pw) pw.type = "password";
+  if (pwCheck) pwCheck.checked = false;
 }
-/* ▼ 各ボックスの配色設定 */
-div#tab1 { border: 2px solid #DDD; background-color: #fbfbfb; }
-div#tab2 { border: 2px solid #DDD; background-color: #fbfbfb; }
-div#tab3 { border: 2px solid #DDD; background-color: #fbfbfb; }
-div.tab p { margin: 0.5em; }
-</style>
+
+window.onload = showMsg;
+
+/*]]>*/
+</script>
 </head>
 <body>
   <div class="wrapper">
@@ -42,44 +43,70 @@ div.tab p { margin: 0.5em; }
 
     <div class="container">
       <div class="side">
+        <!--/* ▼ サイドメニュー表示 */-->
         <div th:include="common/layout :: sideMenu"></div>
+        <!--/* ▲ サイドメニュー表示 */-->
       </div>
-      <div class="main">
+      <div class="main" th:with="uri      = ${#httpServletRequest.requestURI},
+                                 isNew    = ${#strings.contains(uri, '__@{/maintenance/user/new}__')},
+                                 isEdit   = ${#strings.contains(uri, '__@{/maintenance/user/edit}__')},
+                                 isDetail = ${#strings.contains(uri, '__@{/maintenance/user/detail}__')}">
         <div class="top">
           <!--/* ▼ タブ表示 */-->
-          <div th:with="tabs  = ${ {'ユーザー検索', 'ユーザー登録'} }, 
-                        paths = ${ {'/maintenance/user/search', '/maintenance/user/edit/new'} },
-                        uri    = ${#httpServletRequest.requestURI}">
-            <!--/* 現在のURIを見て、タブの背景色が変わるようクラスを設定 */-->
-            <p class="tabs" th:each="tabNm, status : ${tabs}">
-              <a href="#" th:class="${#strings.contains(uri, paths[__${status.index}__])} ? 'tab' : 'tab_other'" 
-                th:onclick="'window.location.href=\'' + @{${paths[__${status.index}__]}} + '\''">[[${tabNm}]]</a>
-            </p>
-          </div>
+          <div th:if="${isNew}" th:include="user_layout :: tabs"></div>
           <!--/* ▲ タブ表示 */-->
+          
+          <div th:unless="${isNew}" class="boardTitle">[[${isDetail} ? 'ユーザー詳細' : 'ユーザー編集']]</div>
           
           <div class="tab">
             <div class="boardArea" style="border: #d0d0d0 solid 1px;">
-              <form th:action="@{/maintenance/user/create}" method="post"
-                th:object="${userCreateForm}">
-                <table>
+              <form method="post" th:object="${userCreateForm}" th:action="''" >
+                <input type="hidden" id="appCompleteMessage"
+                  th:value='${appCompleteMessage}' />
+                <div th:if="${createFailureMessage!=null or createFailureMessage!=''}">
+                 <span th:text="${createFailureMessage}" style="color: red; padding: 5px;">error</span>
+               </div>
+               <table>
                   <tr>
-                    <td style="width: 150px; text-align: left; padding: 5px;">ユーザーID</td>
-                    <td colspan="3">
-                      <input type="text" th:field="*{userid}" size="15" maxlength="10" placeholder="半角英数字10文字" />
+                    <td style="width: 150px; text-align: left; padding: 5px;">
+                      <label class="required">ユーザーID</label>
+                    </td>
+                    <td colspan="2">
+                      <input th:if="${isNew}" type="text" th:field="*{userid}" size="15" maxlength="10" placeholder="半角英数10文字" required/>
+                      <span th:if="${#fields.hasErrors('userid')}" th:errors="*{userid}" style="color:red;">error!</span>
+                      
+                      <label th:if="${isEdit or isDetail}">[[*{userid}]]</label>
+                      <input th:if="${isEdit}" type="hidden" th:field="*{userid}" />
                     </td>
                   </tr>
                   <tr>
-                    <td style="width: 150px; text-align: left; padding: 5px;">パスワード</td>
-                    <td colspan="3"><label>※自動で発行されます</label></td>
+                    <td style="width: 150px; text-align: left; padding: 5px;" th:unless="${isDetail}">
+                      <label>パスワード</label>
+                    </td>
+                    <td colspan="2">
+                      <label th:if="${isNew}" style="font-size: 12px;">※初期パスワードは「共通キーワード＋ユーザーID」になります。</label>
+                      <input th:if="${isEdit}" id="password" type="text" th:field="*{password}" size="15" maxlength="15" placeholder="半角英数5~10文字" />
+                      <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}" style="color:red;">error!</span>
+                      <input th:if="${isEdit}" type="checkbox" id="password-check" onchange="pwCheckOnchangeHandler()"/>
+                      <label th:if="${isEdit}">パスワードを表示する</label>
+                      <label th:if="${isEdit}" style="font-size: 12px; color:red;"><br/>※入力したパスワードで再設定されます。</label>
+                    </td>
                   </tr>
                   <tr>
-                    <td style="width: 150px; text-align: left; padding: 5px;">ユーザー名</td>
-                    <td colspan="3"><input type="text" th:field="*{username}" size="30" placeholder="全角１～２0文字" /></td>
-                  </tr>
-                  <tr>
-                    <td style="width: 150px; text-align: left; padding: 5px;">権限</td>
+                    <td style="width: 150px; text-align: left; padding: 5px;">
+                      <label class="required">ユーザー名</label>
+                    </td>
                     <td colspan="3">
+                      <input th:if="${isNew or isEdit}" type="text" th:field="*{username}" size="30" maxlength="20" placeholder="全角1～20文字" required />
+                      <span th:if="${#fields.hasErrors('username')}" th:errors="*{username}" style="color:red;">error!</span>
+                      <label th:if="${isDetail}">[[*{username}]]</label>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="width: 150px; text-align: left; padding: 5px;">
+                      <label class="required">権限</label>
+                    </td>
+                    <td colspan="3" th:if="${isNew or isEdit}">
                       <input id="radioUser"
                         type="radio" name="roleName" value="USER"
                         th:field="*{roleName}" checked="checked">ユーザー
@@ -87,29 +114,70 @@ div.tab p { margin: 0.5em; }
                         type="radio" name="roleName" value="ADMIN"
                         th:field="*{roleName}">管理者
                     </td>
-                  </tr>
-                  <!--/*
-                  <tr>
-                    <td style="width: 150px; text-align: left; padding: 5px;">メールアドレス</td>
-                    <td colspan="3"><input type="text" th:field="*{email}" />
+                    <td colspan="3" th:if="${isDetail}">
+                      <label>[[*{roleName}]]</label>
                     </td>
                   </tr>
-                  */-->
+                  
+                  <div th:unless="${isNew}">
+                    <tr>
+                      <td style="width: 150px; text-align: left; padding: 5px;">ログイン失敗数</td>
+                      <td colspan="3">
+                        <label th:if="${isDetail}">[[*{loginFailureCount}]]</label>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="width: 150px; text-align: left; padding: 5px;">ログイン拒否日時</td>
+                      <td colspan="3">
+                        <label>[[*{loginDenyTime}]]</label>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="width: 150px; text-align: left; padding: 5px;">削除</td>
+                      <td colspan="3">
+                        <label>[[*{deleted==1 ? '済' : ''}]]</label>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="width: 150px; text-align: left; padding: 5px;">最終更新者</td>
+                      <td colspan="3">
+                        <label>[[*{updaterId}]]</label>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="width: 150px; text-align: left; padding: 5px;">最終更新日時</td>
+                      <td colspan="3">
+                        <label>[[*{updateTime}]]</label>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="width: 150px; text-align: left; padding: 5px;">登録者</td>
+                      <td colspan="3">
+                        <label>[[*{createrId}]]</label>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="width: 150px; text-align: left; padding: 5px;">登録日時</td>
+                      <td colspan="3">
+                        <label>[[*{createTime}]]</label>
+                      </td>
+                    </tr>
+                  </div>
                   <tr>
-                    <td colspan="3">
-                      <ul>
-                        <li th:each="error:${#fields.detailedErrors()}"><span
-                          th:text="${error.message}">Error message</span></li>
-                      </ul>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th></th>
-                    <td colspan="3" style="float: right;">
-                      <button type="submit">登録</button>
+                    <td></td>
+                    <td colspan="3" th:object="${userCreateForm}" >
+                      <button th:if="${isNew or isEdit}" type="submit">[[${isNew} ? '登録' : '更新']]</button>
+                      <button th:if="${isDetail}" type="button" 
+                          th:onclick="'location.href=\''+ @{/maintenance/user/edit}+ '?userid=' + *{userid} +'\''">編集</button>
+                      <button th:unless="${isNew}" type="button" 
+                          th:onclick="'location.href=\''+ (
+                                           ${isDetail} ? @{/maintenance/user/search} 
+                                               : @{/maintenance/user/detail} +'?userid=' + *{userid}) + '\''">戻る</button>
                     </td>
                   </tr>
                 </table>
+                <div>
+                </div>
               </form>
             </div>
           </div>
@@ -120,10 +188,6 @@ div.tab p { margin: 0.5em; }
     <footer>
       <div th:include="common/layout :: footer"></div>
     </footer>
-    
-<script type="text/javascript">
-   changeTab('tab1');
-</script>
   </div>
 </body>
 </html>

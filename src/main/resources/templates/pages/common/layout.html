@@ -15,7 +15,7 @@
 <link rel="stylesheet" th:href="@{/css/app.css}" />
 <script type="text/javascript">
 /*<![CDATA[*/
-function showModalDialog(msgTxt, url) {
+function showModalComfirmDialog(msgTxt, url) {
   const modal = document.getElementById('modalDialog');
   const btnCancel = document.getElementById("btnCancel");
   const btnOk = document.getElementById("btnOk");
@@ -41,10 +41,36 @@ function showModalDialog(msgTxt, url) {
   modal.style.display = "block";
 }
 
+function showModalDialog(msgTxt, url) {
+  const modal = document.getElementById('modalDialog');
+  const btnCancel = document.getElementById("btnCancel");
+  const btnOk = document.getElementById("btnOk");
+  const closeMark = document.getElementsByClassName("closeMark")[0];
+  const msg = document.getElementById("msg");
+  // メッセージの設定
+  msg.innerText = msgTxt;
+  btnCancel.style.visibility = "hidden";
+
+  // OK押下時
+  btnOk.onclick = function() {
+    modal.style.display = "none";
+    if(url) location.href = url;
+  }
+
+  // 「x」押下時
+  closeMark.onclick = function() {
+    modal.style.display = "none";
+  }
+  
+  modal.style.display = "block";
+}
 function logout() {
   const message = "ログアウトしますがよろしいですか？";
   const url = "[[@{/security/logout}]]";
-  showModalDialog(message,url);
+  showModalComfirmDialog(message,url);
+}
+function msgModal(msg, url) {
+	showModalDialog(msg,url);
 }
 function onclickUserName() {
   const chkUserName = document.getElementById("chkUserName");
@@ -85,7 +111,8 @@ function onclickUserName() {
         style="vertical-align: middle; padding-left: 5px; font-size: 22px;"><b>-稼働状況管理-</b></span>
       </a>
     </div>
-    <!-- End Logo --> <!-- Modalダイアログ -->
+    <!-- End Logo -->
+    <!-- Modalダイアログ -->
     <div id="modalDialog" class="modal">
       <!-- Modal content -->
       <div class="modal-content">
@@ -132,15 +159,22 @@ function onclickUserName() {
                             '__@{/maintenance/user/}__'
                          } },
                 toPaths = ${ {'__@{/top}__',
-                            '__@{/assign}__',
-                            '__@{/staff}__',
-                            '__@{/project}__',
-                            '__@{/client}__',
-                            '__@{/maintenance/user/search}__'
+                             '__@{/assign}__',
+                             '__@{/staff}__',
+                             '__@{/project}__',
+                             '__@{/client}__',
+                             '__@{/maintenance/user/search}__'
+                         } },
+                roles   = ${ {'USER,ADMIN',
+                             'USER,ADMIN',
+                             'USER,ADMIN',
+                             'USER,ADMIN',
+                             'USER,ADMIN',
+                             'ADMIN'
                          } },
                 uri   = ${#httpServletRequest.requestURI}">
     <ul id="menu" class="menuLists" th:each="menu, status : ${menus}">
-      <li
+      <li th:if="${#strings.contains(roles[__${status.index}__], sessionUserRole)}"
         th:with="bg=${#strings.contains(uri, paths[__${status.index}__])} ? 'background-color:#dda0dd;' : '' ">
         <a th:href="${toPaths[__${status.index}__]}" class="menuList" th:style="${bg}">[[${menu}]]</a>
       </li>

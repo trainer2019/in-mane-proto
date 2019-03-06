@@ -5,44 +5,34 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import jp.co.careritz.inmane.dao.UserDao;
-import jp.co.careritz.inmane.dto.UserDto;
+import jp.co.careritz.inmane.dao.UsersDao;
+import jp.co.careritz.inmane.dto.UsersDto;
 
 @Service
-public class UserService {
+public class UsersService {
 
 	@Autowired
-	private UserDao dao;
+	private UsersDao dao;
 	
 	/**
 	 * ユーザ情報を取得するサービス
 	 *
 	 * @return メッセージを格納したDTO
 	 */
-	public UserDto findByPk(String userid) {
+	public UsersDto findByPk(String userid) {
 
 		return dao.selectOne(userid);
 	}
 
-	/**
-	 * 全ユーザ情報を取得するサービス
-	 *
-	 * @return メッセージを格納したリスト
-	 */
-	public List<UserDto> findAll() {
-
-		return dao.selectAll();
-	}
-	
 	/**
 	 * ユーザ情報を取得するサービス
 	 * @param deleted 
 	 *
 	 * @return メッセージを格納したリスト
 	 */
-	public List<UserDto> find(String userid, String username, String roleName, String nonDeleted) {
+	public List<UsersDto> find(UsersDto dto, boolean nonDeleted) {
 
-		return dao.select(userid, username, roleName, nonDeleted);
+		return dao.select(dto, nonDeleted);
 	}
 	
 	/**
@@ -50,12 +40,12 @@ public class UserService {
 	 *
 	 * @param userDto メッセージを格納したリスト
 	 */
-	public int updateByPk(UserDto dto) {
+	public int updateByPk(UsersDto dto) {
 
 		return dao.update(dto);
 	}
 
-	public int create(UserDto dto) {
+	public int create(UsersDto dto) {
 
 		return dao.create(dto);
 	}

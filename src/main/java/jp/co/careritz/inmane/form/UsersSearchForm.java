@@ -3,24 +3,26 @@ package jp.co.careritz.inmane.form;
 import java.io.Serializable;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
 
 /**
  * ログインフォーム
  */
-public class UserSearchForm implements Serializable  {
+public class UsersSearchForm implements Serializable  {
 
 	/** シリアルバージョンUID */
 	private static final long serialVersionUID = 1L;
 
 	/** ユーザID */
-	public String userid;
+	private String userid;
 	/** ユーザ名 */
-	public String username;
-	@NotEmpty
-	public String roleName;
+	private String username;
+	@NotEmpty(message="必須入力の項目です。")
+	@Pattern(regexp = "ALL|USER|ADMIN", message="不正な値が設定されています。")
+	private String roleName;
 	/** 削除済を含む */
-	@NotEmpty
-	public String nonDeleted;
+	private String nonDeleted;
+	
 	public String getUserid() {
 		return userid;
 	}

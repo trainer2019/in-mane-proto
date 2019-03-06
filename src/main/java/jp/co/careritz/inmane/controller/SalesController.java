@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import jp.co.careritz.inmane.controller.commons.AbstractAppController;
 
 @Controller
-public class AssignController extends AbstractAppController {
-	@RequestMapping(value = "assign", method = RequestMethod.GET)
+public class SalesController extends AbstractAppController {
+	@RequestMapping(value = "sales", method = RequestMethod.GET)
 	String showStaffList(Model model) {
-		return "assign_search";
+		return "sales_search";
 	}
 }

@@ -8,9 +8,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import jp.co.careritz.inmane.dto.UserDto;
+import jp.co.careritz.inmane.dto.UsersDto;
 
-public class SecurityUserModel extends UserDto implements Serializable, UserDetails {
+public class SecurityUserModel extends UsersDto implements Serializable, UserDetails {
 	
 	/** シリアルバージョンUID */
 	private static final long serialVersionUID = 1L;

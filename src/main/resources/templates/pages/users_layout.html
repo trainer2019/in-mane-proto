@@ -16,11 +16,11 @@
     <tabs id="tabs">
       <!--/* ▼ タブ表示 */-->
       <div th:with="tabs  = ${ {'ユーザー検索', 'ユーザー登録'} }, 
-                    paths = ${ {'__@{/maintenance/user/search}__',
-                                '__@{/maintenance/user/new}__'
+                    paths = ${ {'__@{/maintenance/users/search}__',
+                                '__@{/maintenance/users/new}__'
                             } },
-                    toPaths = ${ {'__@{/maintenance/user/search}__',
-                                  '__@{/maintenance/user/new}__'
+                    toPaths = ${ {'__@{/maintenance/users/search}__',
+                                  '__@{/maintenance/users/new}__'
                               } },
                     uri   = ${#httpServletRequest.requestURI}">
         <!--/* 現在のURIを見て、タブの背景色が変わるようクラスを設定 */-->

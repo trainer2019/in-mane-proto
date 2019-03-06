@@ -14,9 +14,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import jp.co.careritz.inmane.config.PropertyConfig;
-import jp.co.careritz.inmane.dto.UserDto;
+import jp.co.careritz.inmane.dto.UsersDto;
 import jp.co.careritz.inmane.model.security.SecurityUserModel;
-import jp.co.careritz.inmane.service.UserService;
+import jp.co.careritz.inmane.service.UsersService;
 
 
 /**
@@ -31,7 +31,7 @@ public class SecurityLoginService implements UserDetailsService {
 	@Autowired
 	private PropertyConfig propertyConfig;
 	@Autowired
-	private UserService userService;
+	private UsersService usersService;
 
 	// ----------------------------------------------------------------------
 	// インスタンスメソッド
@@ -51,18 +51,18 @@ public class SecurityLoginService implements UserDetailsService {
 		// アカウントロック時間（秒）
 		Long lockSecond = Long.valueOf(propertyConfig.get("login.lock.second"));
 		// 社員情報の取得
-		UserDto userDto= userService.findByPk(userid);
+		UsersDto usersDto= usersService.findByPk(userid);
 
 		/* ---------------------------------------------------- */
 		/* 認証処理 */
 		/* ---------------------------------------------------- */
-		if (userDto != null) {
-			System.out.println("### userDto.userid:" + userDto.getUserid());
-			System.out.println("### userDto.roleName:" + userDto.getRoleName());
+		if (usersDto != null) {
+			System.out.println("### userDto.userid:" + usersDto.getUserid());
+			System.out.println("### userDto.roleName:" + usersDto.getRoleName());
 			// ログイン認証情報に社員情報をコピー
-			BeanUtils.copyProperties(userDto, user);
+			BeanUtils.copyProperties(usersDto, user);
 			
-			SimpleGrantedAuthority authority = new SimpleGrantedAuthority(userDto.getRoleName());
+			SimpleGrantedAuthority authority = new SimpleGrantedAuthority(usersDto.getRoleName());
 			List<SimpleGrantedAuthority> authorities = new ArrayList<>();
 			authorities.add(authority);
 			user.setAuthorities(authorities);

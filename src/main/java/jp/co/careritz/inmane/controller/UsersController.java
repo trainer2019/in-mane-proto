@@ -25,15 +25,15 @@ import org.springframework.web.servlet.support.SessionFlashMapManager;
 
 import jp.co.careritz.inmane.config.PropertyConfig;
 import jp.co.careritz.inmane.controller.commons.AbstractAppController;
-import jp.co.careritz.inmane.dto.UserDto;
-import jp.co.careritz.inmane.form.UserCreateForm;
-import jp.co.careritz.inmane.form.UserSearchForm;
+import jp.co.careritz.inmane.dto.UsersDto;
+import jp.co.careritz.inmane.form.UsersCreateForm;
+import jp.co.careritz.inmane.form.UsersSearchForm;
 import jp.co.careritz.inmane.model.security.SecurityUserModel;
-import jp.co.careritz.inmane.service.UserService;
+import jp.co.careritz.inmane.service.UsersService;
 
 @Controller
-@RequestMapping("maintenance/user")
-public class UserController extends AbstractAppController {
+@RequestMapping("maintenance/users")
+public class UsersController extends AbstractAppController {
 	
 	// ----------------------------------------------------------------------
 	// インスタンス変数
@@ -41,54 +41,50 @@ public class UserController extends AbstractAppController {
 	@Autowired
 	private PropertyConfig propertyConfig;
 	@Autowired
-	UserService userService;
+	UsersService usersService;
 	
 	// ----------------------------------------------------------------------
 	// インスタンスメソッド
 	// ----------------------------------------------------------------------
 	@GetMapping("search")
 	public String viewSearch(
-			@RequestParam(name = "userid", defaultValue = "") String userid,
-			@RequestParam(name = "username", defaultValue = "") String username,
-			@RequestParam(name = "roleName", defaultValue = "") String roleName,
-			@RequestParam(name = "nonDeleted", defaultValue = "") String nonDeleted,
+			@ModelAttribute UsersSearchForm form,
 			Model model) {
-		System.out.println("### userid:" + userid);
-		System.out.println("### username:" + username);
-		System.out.println("### roleName:" + roleName);
-		System.out.println("### nonDeleted:" + nonDeleted);
+		System.out.println("### userid:" + form.getUserid());
+		System.out.println("### username:" + form.getUsername());
+		System.out.println("### roleName:" + form.getRoleName());
+		System.out.println("### nonDeleted:" + form.getNonDeleted());
 
-		List<UserDto> users = userService.find(userid, username, roleName, nonDeleted);
+		UsersDto dto = new UsersDto();
+		
+		dto.setUserid(form.getUserid());
+		dto.setUsername(form.getUsername());
+		dto.setRoleName("ALL".equals(form.getRoleName()) ? "" : form.getRoleName());
+		
+		List<UsersDto> usersList = usersService.find(dto, "true".equals(form.getNonDeleted()));
 		
 		// 検索条件を設定
-		UserSearchForm form = new UserSearchForm();
-		form.setUserid(userid);
-		form.setUsername(username);
-		form.setRoleName(roleName);
-		form.setNonDeleted(nonDeleted);
-		
-		model.addAttribute("userSearchForm", form);
+		model.addAttribute("usersSearchForm", form);
 		// 検索結果を設定
-		model.addAttribute("users", users);
+		model.addAttribute("usersList", usersList);
 
-		//return "user_top";
-		return "user_search";
+		return "users_search";
 	}
 	
 	@GetMapping("new")
 	public String viewCreate(Model model) {
 		
-		UserCreateForm form = new UserCreateForm();
+		UsersCreateForm form = new UsersCreateForm();
 		form.setRoleName("USER");
 		
-		model.addAttribute("userCreateForm", form);
+		model.addAttribute("usersCreateForm", form);
 		
-		return "user_create";
+		return "users_create";
 	}
 	
 	@PostMapping("new")
 	public String create(Model model, 
-			@ModelAttribute @Valid UserCreateForm form,
+			@ModelAttribute @Valid UsersCreateForm form,
 			BindingResult bindingResult,
 			@AuthenticationPrincipal SecurityUserModel userDetails,
 			RedirectAttributes redirectAttributes,
@@ -96,14 +92,14 @@ public class UserController extends AbstractAppController {
 			HttpServletResponse res) {
 
 		if (bindingResult.hasErrors()) {
-			model.addAttribute("userCreateForm", form);
-			return "user_create";
+			model.addAttribute("usersCreateForm", form);
+			return "users_create";
 		}
 		
 		final String prefix = propertyConfig.get("user.defaultpass.prefix");
 		final String password = new BCryptPasswordEncoder().encode(prefix + form.getUserid());
 		
-		UserDto dto = new UserDto();
+		UsersDto dto = new UsersDto();
 		
 		dto.setUserid(form.getUserid());
 		dto.setPassword(password);
@@ -112,7 +108,7 @@ public class UserController extends AbstractAppController {
 		dto.setDeleted(0);
 		dto.setCreaterId(userDetails.getUserid());
 		
-		int result = userService.create(dto);
+		int result = usersService.create(dto);
 		
 		FlashMap flashMap = RequestContextUtils.getOutputFlashMap(req);
 		FlashMapManager flashMapManager = new SessionFlashMapManager();
@@ -128,10 +124,10 @@ public class UserController extends AbstractAppController {
 			flashMap.put("createFailureMessage", errMsg);
 			flashMapManager.saveOutputFlashMap(flashMap, req, res);
 			
-			model.addAttribute("userCreateForm", form);
-			return "user_create";
+			model.addAttribute("usersCreateForm", form);
+			return "users_create";
 		}
-		return "redirect:/maintenance/user/detail?userid=" + dto.getUserid();
+		return "redirect:/maintenance/users/detail?userid=" + dto.getUserid();
 	}
 	
 	@GetMapping("detail")
@@ -141,12 +137,12 @@ public class UserController extends AbstractAppController {
 			return "redirect:/error/403";
 		}
 		
-		UserDto dto = userService.findByPk(userid);
+		UsersDto dto = usersService.findByPk(userid);
 		
 		if (dto == null) {
 			return "redirect:/error/403";
 		}
-		UserCreateForm form = new UserCreateForm();
+		UsersCreateForm form = new UsersCreateForm();
 		form.setUserid(dto.getUserid());
 		form.setUsername(dto.getUsername());
 		form.setRoleName(dto.getRoleName());
@@ -158,9 +154,9 @@ public class UserController extends AbstractAppController {
 		form.setCreaterId(dto.getCreaterId());
 		form.setCreateTime(dto.getCreateTime());
 		
-		model.addAttribute("userCreateForm", form);
+		model.addAttribute("usersCreateForm", form);
 		
-		return "user_create";
+		return "users_create";
 	}
 	
 	
@@ -171,13 +167,13 @@ public class UserController extends AbstractAppController {
 			return "redirect:/error/403";
 		}
 		
-		UserDto dto = userService.findByPk(userid);
+		UsersDto dto = usersService.findByPk(userid);
 		
 		if (dto == null) {
 			return "redirect:/error/403";
 		}
 		
-		UserCreateForm form = new UserCreateForm();
+		UsersCreateForm form = new UsersCreateForm();
 		form.setUserid(dto.getUserid());
 		form.setUsername(dto.getUsername());
 		form.setRoleName(dto.getRoleName());
@@ -189,14 +185,14 @@ public class UserController extends AbstractAppController {
 		form.setCreaterId(dto.getCreaterId());
 		form.setCreateTime(dto.getCreateTime());
 		
-		model.addAttribute("userCreateForm", form);
+		model.addAttribute("usersCreateForm", form);
 		
-		return "user_create";
+		return "users_create";
 	}
 	
 	@PostMapping("edit")
 	public String update(Model model, 
-			@ModelAttribute @Valid UserCreateForm form,
+			@ModelAttribute @Valid UsersCreateForm form,
 			BindingResult bindingResult,
 			@AuthenticationPrincipal SecurityUserModel userDetails,
 			RedirectAttributes redirectAttributes,
@@ -204,13 +200,13 @@ public class UserController extends AbstractAppController {
 			HttpServletResponse res) {
 
 		if (bindingResult.hasErrors()) {
-			model.addAttribute("userCreateForm", form);
-			return "user_create";
+			model.addAttribute("usersCreateForm", form);
+			return "users_create";
 		}
 		
 		final String password = new BCryptPasswordEncoder().encode(form.getPassword());
 		
-		UserDto dto = new UserDto();
+		UsersDto dto = new UsersDto();
 		
 		dto.setUserid(form.getUserid());
 		dto.setPassword(password);
@@ -219,7 +215,7 @@ public class UserController extends AbstractAppController {
 		dto.setDeleted(0);
 		dto.setUpdaterId(userDetails.getUserid());
 		
-		int result = userService.updateByPk(dto);
+		int result = usersService.updateByPk(dto);
 		
 		FlashMap flashMap = RequestContextUtils.getOutputFlashMap(req);
 		FlashMapManager flashMapManager = new SessionFlashMapManager();
@@ -235,9 +231,9 @@ public class UserController extends AbstractAppController {
 			flashMap.put("createFailureMessage", errMsg);
 			flashMapManager.saveOutputFlashMap(flashMap, req, res);
 			
-			model.addAttribute("userCreateForm", form);
-			return "user_create";
+			model.addAttribute("usersCreateForm", form);
+			return "users_create";
 		}
-		return "redirect:/maintenance/user/detail?userid=" + dto.getUserid();
+		return "redirect:/maintenance/users/detail?userid=" + dto.getUserid();
 	}
 }

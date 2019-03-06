@@ -150,22 +150,25 @@ function onclickUserName() {
   <div th:fragment="sideMenu">
     <sideMenu id="sideMenu">
     <div 
-       th:with="menus = ${ {'Top', '稼働状況', 'スタッフ情報', '案件情報', '取引先情報', 'ユーザー管理'} }, 
+       th:with="menus = ${ {'Top', '稼働状況', 'スタッフ情報', '案件情報', '取引先情報', '営業管理', 'ユーザー管理'} }, 
                 paths = ${ {'__@{/top}__',
-                            '__@{/assign}__',
-                            '__@{/staff}__',
-                            '__@{/project}__',
-                            '__@{/client}__',
-                            '__@{/maintenance/user/}__'
+                            '__@{/assignments}__',
+                            '__@{/staffs}__',
+                            '__@{/projects}__',
+                            '__@{/clients}__',
+                            '__@{/sales}__',
+                            '__@{/maintenance/users/}__'
                          } },
                 toPaths = ${ {'__@{/top}__',
-                             '__@{/assign}__',
-                             '__@{/staff}__',
-                             '__@{/project}__',
-                             '__@{/client}__',
-                             '__@{/maintenance/user/search}__'
+                             '__@{/assignments}__',
+                             '__@{/staffs}__',
+                             '__@{/projects}__',
+                             '__@{/clients}__',
+                             '__@{/sales}__',
+                             '__@{/maintenance/users/search?roleName=ALL&nonDeleted=true}__'
                          } },
                 roles   = ${ {'USER,ADMIN',
+                             'USER,ADMIN',
                              'USER,ADMIN',
                              'USER,ADMIN',
                              'USER,ADMIN',
@@ -182,7 +185,8 @@ function onclickUserName() {
     </div>
     </sideMenu>
   </div>
-  <!-- End Side Menu --> <!-- Footer -->
+  <!-- End Side Menu -->
+  <!-- Footer -->
   <div th:fragment="footer">
     <footer id="footer">
       <div>

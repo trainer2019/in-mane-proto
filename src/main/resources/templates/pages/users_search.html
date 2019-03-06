@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <title>ユーザ管理</title>
 <meta th:include="common/layout.html::head" th:remove="tag"></meta>
-<link rel="stylesheet" th:href="@{/css/page/user.css}" />
+<link rel="stylesheet" th:href="@{/css/page/users.css}" />
 
 <script type="text/javascript">
 /*<![CDATA[*/
@@ -33,14 +33,14 @@ window.onload = function () {
       <div class="main">
         <div class="top">
           <!--/* ▼ タブ表示 */-->
-          <div th:include="user_layout :: tabs"></div>
+          <div th:include="users_layout :: tabs"></div>
           <!--/* ▲ タブ表示 */-->
           
           <div class="tab">
             <!--/* ▼ 検索フォーム */-->
             <form method="get" action="#"
-              th:action="@{/maintenance/user/search}"
-              th:object="${userSearchForm}">
+              th:action="@{/maintenance/users/search}"
+              th:object="${usersSearchForm}">
               
               <div class="boardArea" style="border: #d0d0d0 solid 1px;">
                 <table class="search_conditions">
@@ -58,7 +58,7 @@ window.onload = function () {
                     <td colspan="1"><label>権限：</label></td>
                     <td colspan="2">
                     <input id="radioAll" type="radio"
-                      name="roleName" value="" th:field="*{roleName}"
+                      name="roleName" value="ALL" th:field="*{roleName}"
                       checked="checked">全て 
                     <input id="radioUser"
                       type="radio" name="roleName" value="USER"
@@ -70,7 +70,7 @@ window.onload = function () {
                   <tr>
                     <td colspan="1"><label for="nonDeleted">削除済を除外：</label></td>
                     <td colspan="2"><input type="checkbox" name="nonDeleted"
-                      value="true" th:field="*{nonDeleted}" checked="checked" /></td>
+                      value="true" th:field="*{nonDeleted}" checked="checked"/></td>
                   </tr>
                   <tr>
                     <td colspan="3" style="text-align: right;">
@@ -87,7 +87,7 @@ window.onload = function () {
         <!--/* ▼ 検索結果リスト */-->
         <div class="bottom">
           <div id="count">
-            <span th:text="'【検索結果：'+${#lists.size(users)}+'件】'"></span>
+            <span th:text="'【検索結果：'+${#lists.size(usersList)}+'件】'"></span>
           </div>
           <div id="dataTable" class="dataTable">
             <div id="tHeader">
@@ -106,10 +106,10 @@ window.onload = function () {
 
             <div id="tData">
               <table class="t" name="tData">
-                <tr th:if="user" th:each="user, userStat:${users}">
+                <tr th:if="user" th:each="user, userStat:${usersList}">
                   <td th:text="${userStat.count}"></td>
                   <td>
-                    <a th:href="@{'/maintenance/user/detail?userid=' + ${user.userid}}">[[${user.userid}]]</a>
+                    <a th:href="@{'/maintenance/users/detail?userid=' + ${user.userid}}">[[${user.userid}]]</a>
                   </td>
                   <td th:text="${user.username}"></td>
                   <td th:text="${user.roleName}"></td>

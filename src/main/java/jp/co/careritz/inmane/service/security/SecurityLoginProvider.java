@@ -10,9 +10,9 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.core.Authentication;
 
 import jp.co.careritz.inmane.config.PropertyConfig;
-import jp.co.careritz.inmane.dto.UserDto;
+import jp.co.careritz.inmane.dto.UsersDto;
 import jp.co.careritz.inmane.model.security.SecurityUserModel;
-import jp.co.careritz.inmane.service.UserService;
+import jp.co.careritz.inmane.service.UsersService;
 
 /**
  * ログインプロバイダー
@@ -25,7 +25,7 @@ public class SecurityLoginProvider extends DaoAuthenticationProvider {
 	@Autowired
 	private PropertyConfig propertyConfig;
 	@Autowired
-	private UserService userService;
+	private UsersService usersService;
 
 	// ----------------------------------------------------------------------
 	// インスタンスメソッド
@@ -41,13 +41,15 @@ public class SecurityLoginProvider extends DaoAuthenticationProvider {
 			SecurityUserModel user = (SecurityUserModel) auth.getPrincipal();
 
 			// 認証失敗情報の初期化
-			UserDto dto = userService.findByPk(user.getUserid());
+			UsersDto result = usersService.findByPk(user.getUserid());
+			
+			UsersDto dto = new UsersDto();
+			dto.setUserid(result.getUserid());
 			dto.setLoginFailureCount(0);
 			dto.setLoginDenyTime(null);
-			dto.setUpdaterId(dto.getUserid());
-			dto.setUpdateTime(new Date(System.currentTimeMillis()));
+			dto.setUpdaterId(result.getUpdaterId());
 			// USERデータの更新
-			userService.updateByPk(dto);
+			usersService.updateByPk(dto);
 
 			return auth;
 		}
@@ -55,17 +57,18 @@ public class SecurityLoginProvider extends DaoAuthenticationProvider {
 		catch (BadCredentialsException e) {
 
 			// 認証失敗情報の登録
-			UserDto dto = userService.findByPk(authentication.getName());
+			UsersDto result = usersService.findByPk(authentication.getName());
 			
-			if (dto != null) {
+			if (result != null) {
 				Date now = new Date(System.currentTimeMillis());
-				dto.setLoginFailureCount(dto.getLoginFailureCount() + 1);
+				UsersDto dto = new UsersDto();
+				dto.setUserid(result.getUserid());
+				dto.setLoginFailureCount(result.getLoginFailureCount() + 1);
 				dto.setLoginDenyTime(now);
-				dto.setUpdaterId(dto.getUpdaterId());
-				dto.setUpdateTime(now);
+				dto.setUpdaterId(result.getUpdaterId());
 
 				// USERデータの更新
-				userService.updateByPk(dto);
+				usersService.updateByPk(dto);
 			}
 
 			throw new BadCredentialsException(propertyConfig.get("error.app.login.auth"));

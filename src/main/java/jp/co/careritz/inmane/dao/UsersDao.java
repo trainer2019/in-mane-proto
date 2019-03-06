@@ -41,7 +41,7 @@ public class UsersDao extends BaseDao {
 
 			StringBuilder sqlBuilder = new StringBuilder();
 			sqlBuilder.append("SELECT * ");
-			sqlBuilder.append("FROM USER_INFO ");
+			sqlBuilder.append("FROM USERS ");
 			sqlBuilder.append("WHERE USERID LIKE ? ");
 			
 			System.out.println("### SQL:" + sqlBuilder.toString());
@@ -125,7 +125,7 @@ public class UsersDao extends BaseDao {
 		try {
 			StringBuilder sqlBuilder = new StringBuilder();
 			sqlBuilder.append("SELECT * ");
-			sqlBuilder.append("FROM USER_INFO ");
+			sqlBuilder.append("FROM USERS ");
 			sqlBuilder.append("WHERE USERID    LIKE ? ");
 			sqlBuilder.append("AND   USERNAME  LIKE ? ");
 			sqlBuilder.append("AND   ROLE_NAME LIKE ? ");
@@ -212,7 +212,7 @@ public class UsersDao extends BaseDao {
 			System.out.println("### userPass:" + USER_PASS);
 			
 			StringBuilder sqlBuilder = new StringBuilder();
-			sqlBuilder.append("UPDATE USER_INFO ");
+			sqlBuilder.append("UPDATE USERS ");
 			sqlBuilder.append("SET ");
 			// パスワード再設定時以外は更新しない
 			if (dto.getPassword() != null && !dto.getPassword().equals("")) {
@@ -317,7 +317,7 @@ public class UsersDao extends BaseDao {
 			System.out.println("### userPass:" + USER_PASS);
 			
 			StringBuilder sqlBuilder = new StringBuilder();
-			sqlBuilder.append("INSERT INTO USER_INFO (");
+			sqlBuilder.append("INSERT INTO USERS (");
 			sqlBuilder.append(" USERID ");
 			sqlBuilder.append(",PASSWORD ");
 			sqlBuilder.append(",USERNAME ");

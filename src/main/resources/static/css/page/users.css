@@ -83,6 +83,14 @@ table.t tr:nth-child(even) td {
   text-align: center;
 }
 
+[name="tData"] .ellipsis {
+  display: block;
+  width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
 #tHeader {
 }
 

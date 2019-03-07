@@ -111,7 +111,7 @@ window.onload = function () {
                   <td>
                     <a th:href="@{'/maintenance/users/detail?userid=' + ${user.userid}}">[[${user.userid}]]</a>
                   </td>
-                  <td th:text="${user.username}"></td>
+                  <td><label class="ellipsis" th:text="${user.username}" th:title="${user.username}"></label></td>
                   <td th:text="${user.roleName}"></td>
                   <td>[[${user.deleted==1} ? '済' : '']]</td>
                   <td

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="ja" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.springframework.org/schema/security" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<html lang="ja" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.springframework.org/schema/security"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head th:fragment="head">
 <title>NOT FOUND</title>
 <meta th:include="common/layout.html::head" th:remove="tag"></meta>
@@ -7,18 +8,18 @@
 
 <body>
   <main>
-    <section>
+  <section>
+    <div>
+      <div>NOT FOUND</div>
+
       <div>
-        <div>NOT FOUND</div>
+        <h1>ページが見つかりません</h1>
 
-        <div>
-          <h1>ページが見つかりません</h1>
-
-          <hr>
-          <p>お探しのページは移動もしくは削除された可能性があります。</p>
-        </div>
+        <hr>
+        <p>お探しのページは移動もしくは削除された可能性があります。</p>
       </div>
-    </section>
+    </div>
+  </section>
   </main>
 </body>
 </html>

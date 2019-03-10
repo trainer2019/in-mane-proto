@@ -6,33 +6,32 @@
 <meta th:include="common/layout.html::head" th:remove="tag"></meta>
 <link rel="stylesheet" th:href="@{/css/page/users.css}" />
 <script type="text/javascript">
-/*<![CDATA[*/
-function pwCheckOnchangeHandler() {
-  console.info('#### ');
-  const pw = document.getElementById("password");
-  const pwCheck = document.getElementById("password-check");
-  
-  if(pwCheck.checked) {
+  /*<![CDATA[*/
+  function pwCheckOnchangeHandler() {
+    const pw = document.getElementById("password");
+    const pwCheck = document.getElementById("password-check");
+
+    if (pwCheck.checked) {
       pw.setAttribute("type", "text");
-  } else {
+    } else {
       pw.setAttribute("type", "password");
+    }
   }
-}
-function showMsg() {
-  const msgEl = document.getElementById("appCompleteMessage");
-  const msg = msgEl.value;
-  console.info(msg);
-  if (msg) msgModal(msg);
-  
-  const pw = document.getElementById("password");
-  const pwCheck = document.getElementById("password-check");
-  if (pw) pw.type = "password";
-  if (pwCheck) pwCheck.checked = false;
-}
+  function showMsg() {
+    const msgEl = document.getElementById("appCompleteMessage");
+    const msg = msgEl.value;
+    console.info(msg);
+    if (msg) msgModal(msg);
 
-window.onload = showMsg;
+    const pw = document.getElementById("password");
+    const pwCheck = document.getElementById("password-check");
+    if (pw) pw.type = "password";
+    if (pwCheck) pwCheck.checked = false;
+  }
 
-/*]]>*/
+  window.onload = showMsg;
+
+  /*]]>*/
 </script>
 </head>
 <body>
@@ -47,7 +46,8 @@ window.onload = showMsg;
         <div th:include="common/layout :: sideMenu"></div>
         <!--/* ▲ サイドメニュー表示 */-->
       </div>
-      <div class="main" th:with="uri      = ${#httpServletRequest.requestURI},
+      <div class="main"
+        th:with="uri      = ${#httpServletRequest.requestURI},
                                  isNew    = ${#strings.contains(uri, '__@{/maintenance/users/new}__')},
                                  isEdit   = ${#strings.contains(uri, '__@{/maintenance/users/edit}__')},
                                  isDetail = ${#strings.contains(uri, '__@{/maintenance/users/detail}__')}">
@@ -55,28 +55,26 @@ window.onload = showMsg;
           <!--/* ▼ タブ表示 */-->
           <div th:if="${isNew}" th:include="users_layout :: tabs"></div>
           <!--/* ▲ タブ表示 */-->
-          
+
           <div th:unless="${isNew}" class="boardTitle">[[${isDetail} ? 'ユーザー詳細' : 'ユーザー編集']]</div>
-          
+
           <div class="tab">
             <div class="boardArea" style="border: #d0d0d0 solid 1px;">
-              <form method="post" th:object="${usersCreateForm}"
-                    th:action="${isNew or isDetail} ? '' : '__@{/maintenance/users/edit}__'" >
-                <input type="hidden" id="appCompleteMessage"
-                  th:value='${appCompleteMessage}' />
+              <form method="post" th:object="${usersCreateForm}" th:action="${isNew or isDetail} ? '' : '__@{/maintenance/users/edit}__'">
+                <input type="hidden" id="appCompleteMessage" th:value='${appCompleteMessage}' />
                 <div th:if="${createFailureMessage!=null or createFailureMessage!=''}">
-                 <span th:text="${createFailureMessage}" style="color: red; padding: 5px;">error</span>
-               </div>
-               <table>
+                  <span th:text="${createFailureMessage}" style="color: red; padding: 5px;">error</span>
+                </div>
+                <table>
                   <tr>
                     <td style="width: 150px; text-align: left; vertical-align: top; padding: 5px;">
                       <label class="required">ユーザーID</label>
                     </td>
                     <td colspan="2">
-                      <label th:unless="${isNew}">[[*{userid}]]</label>
-                      <input th:if="${isEdit}" type="hidden" th:field="*{userid}" />
-                      <input th:if="${isNew}" type="text" th:field="*{userid}" size="15" maxlength="10" placeholder="半角英数10文字" required/>
-                      <span  th:if="${isNew and #fields.hasErrors('userid')}" th:errors="*{userid}" style="color:red;">error!</span>
+                      <label th:unless="${isNew}">[[*{userId}]]</label>
+                      <input th:if="${isEdit}" type="hidden" th:field="*{userId}" />
+                      <input th:if="${isNew}" type="text" th:field="*{userId}" size="15" maxlength="10" placeholder="半角英数10文字" required />
+                      <span th:if="${isNew and #fields.hasErrors('userId')}" th:errors="*{userId}" style="color: red;">error!</span>
                     </td>
                   </tr>
                   <tr>
@@ -87,14 +85,11 @@ window.onload = showMsg;
                       <label th:if="${isNew}" style="font-size: 12px;">※初期パスワードは「共通キーワード＋ユーザーID」になります。</label>
                       <div th:if="${isEdit}">
                         <input th:if="${isEdit}" id="password" type="text" th:field="*{password}" size="15" maxlength="15" placeholder="半角英数5~10文字" />
-                        <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}" style="color:red;">error!</span>
-                        <br/>
-                        <input type="checkbox" id="password-check" onchange="pwCheckOnchangeHandler()"/>
-                        <label>パスワードを表示する</label>
-                        <label style="font-size: 12px;"><br/>※入力したパスワードで再設定されます。</label>
+                        <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}" style="color: red;">error!</span>
+                        <br />
+                        <input type="checkbox" id="password-check" onchange="pwCheckOnchangeHandler()" />
+                        <label>パスワードを表示する</label> <label style="font-size: 12px;"><br />※入力したパスワードで再設定されます。</label>
                       </div>
-                      
-                      
                     </td>
                   </tr>
                   <tr>
@@ -102,9 +97,9 @@ window.onload = showMsg;
                       <label class="required">ユーザー名</label>
                     </td>
                     <td colspan="3">
-                      <input th:if="${isNew or isEdit}" type="text" th:field="*{username}" size="30" maxlength="20" placeholder="全角1～20文字" required />
-                      <span th:if="${#fields.hasErrors('username')}" th:errors="*{username}" style="color:red;">error!</span>
-                      <label th:if="${isDetail}">[[*{username}]]</label>
+                      <input th:if="${isNew or isEdit}" type="text" th:field="*{userName}" size="30" maxlength="20" placeholder="全角1～20文字" required />
+                      <span th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}" style="color: red;">error!</span>
+                      <label th:if="${isDetail}">[[*{userName}]]</label>
                     </td>
                   </tr>
                   <tr>
@@ -112,18 +107,16 @@ window.onload = showMsg;
                       <label class="required">権限</label>
                     </td>
                     <td colspan="3" th:if="${isNew or isEdit}">
-                      <input id="radioUser"
-                        type="radio" name="roleName" value="USER"
-                        th:field="*{roleName}" checked="checked">ユーザー
-                      <input id="radioAdmin"
-                        type="radio" name="roleName" value="ADMIN"
-                        th:field="*{roleName}">管理者
+                      <input id="radioUser" type="radio" name="roleName" value="USER" th:field="*{roleName}" checked="checked">
+                      ユーザー
+                      <input id="radioAdmin" type="radio" name="roleName" value="ADMIN" th:field="*{roleName}">
+                      管理者
                     </td>
                     <td colspan="3" th:if="${isDetail}">
                       <label>[[*{roleName}]]</label>
                     </td>
                   </tr>
-                  
+
                   <div th:unless="${isNew}">
                     <tr>
                       <td style="width: 150px; text-align: left; padding: 5px; vertical-align: top;">ログイン失敗数</td>
@@ -134,7 +127,7 @@ window.onload = showMsg;
                     <tr>
                       <td style="width: 150px; text-align: left; padding: 5px; vertical-align: top;">ログイン拒否日時</td>
                       <td colspan="3">
-                        <label>[[*{loginDenyTime}]]</label>
+                        <label>[[*{loginDeniedAt}]]</label>
                       </td>
                     </tr>
                     <tr>
@@ -152,7 +145,7 @@ window.onload = showMsg;
                     <tr>
                       <td style="width: 150px; text-align: left; padding: 5px; vertical-align: top;">最終更新日時</td>
                       <td colspan="3">
-                        <label>[[*{updateTime}]]</label>
+                        <label>[[*{updatedAt}]]</label>
                       </td>
                     </tr>
                     <tr>
@@ -164,25 +157,23 @@ window.onload = showMsg;
                     <tr>
                       <td style="width: 150px; text-align: left; padding: 5px; vertical-align: top;">登録日時</td>
                       <td colspan="3">
-                        <label>[[*{createTime}]]</label>
+                        <label>[[*{createdAt}]]</label>
                       </td>
                     </tr>
                   </div>
                   <tr>
                     <td></td>
-                    <td colspan="3" th:object="${usersCreateForm}" >
+                    <td colspan="3" th:object="${usersCreateForm}">
                       <button th:unless="${isDetail}" type="submit">[[${isNew} ? '登録' : '更新']]</button>
-                      <button th:if="${isDetail}" type="button" 
-                          th:onclick="'location.href=\''+ @{/maintenance/users/edit}+ '?userid=' + *{userid} +'\''">編集</button>
-                      <button th:unless="${isNew}" type="button" 
-                          th:onclick="'location.href=\''+ (
+                      <button th:if="${isDetail}" type="button" th:onclick="'location.href=\''+ @{/maintenance/users/edit}+ '?userId=' + *{userId} +'\''">編集</button>
+                      <button th:unless="${isNew}" type="button"
+                        th:onclick="'location.href=\''+ (
                                            ${isDetail} ? @{/maintenance/users/search} +'?roleName=ALL&nonDeleted=true'
-                                               : @{/maintenance/users/detail} +'?userid=' + *{userid}) + '\''">戻る</button>
+                                               : @{/maintenance/users/detail} +'?userId=' + *{userId}) + '\''">戻る</button>
                     </td>
                   </tr>
                 </table>
-                <div>
-                </div>
+                <div></div>
               </form>
             </div>
           </div>

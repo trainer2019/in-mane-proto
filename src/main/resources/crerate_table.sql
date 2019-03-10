@@ -14,18 +14,18 @@
 
 -- テーブル作成
 CREATE TABLE USERS( 
-  USERID VARCHAR2(10) NOT NULL
+  USER_ID VARCHAR2(10) NOT NULL
   , PASSWORD VARCHAR2(60) NOT NULL
-  , USERNAME VARCHAR2(80) NOT NULL
+  , USER_NAME VARCHAR2(80) NOT NULL
   , ROLE_NAME VARCHAR2(5) NOT NULL
   , LOGIN_FAILURE_COUNT NUMBER(1) DEFAULT 0 NOT NULL
-  , LOGIN_DENY_TIME DATE
+  , LOGIN_DENIED_AT DATE
   , DELETED NUMBER(1) DEFAULT 0 NOT NULL
   , UPDATER_ID VARCHAR2(10)
-  , UPDATE_TIME DATE
+  , UPDATED_AT DATE
   , CREATER_ID VARCHAR2(10) NOT NULL
-  , CREATE_TIME DATE NOT NULL
-  , CONSTRAINT PK_USERS PRIMARY KEY (USERID)
+  , CREATED_AT DATE NOT NULL
+  , CONSTRAINT PK_USERS PRIMARY KEY (USER_ID)
 ); 
 
 CREATE TABLE STAFFS( 
@@ -37,9 +37,9 @@ CREATE TABLE STAFFS(
   , JOINED_DATE DATE NOT NULL
   , DELETED NUMBER(1, 0) DEFAULT 0 NOT NULL
   , UPDATER_ID VARCHAR2(10)
-  , UPDATE_TIME DATE
+  , UPDATED_AT DATE
   , CREATER_ID VARCHAR2(10) NOT NULL
-  , CREATE_TIME DATE NOT NULL
+  , CREATED_AT DATE NOT NULL
   , CONSTRAINT PK_STAFFS PRIMARY KEY (STAFF_NO)
 ); 
 
@@ -50,9 +50,9 @@ CREATE TABLE CLIENTS(
   , SALES_STAFF_NO VARCHAR2(10) NOT NULL
   , DELETED NUMBER(1, 0) DEFAULT 0 NOT NULL
   , UPDATER_ID VARCHAR2(10)
-  , UPDATE_TIME DATE
+  , UPDATED_AT DATE
   , CREATER_ID VARCHAR2(10) NOT NULL
-  , CREATE_TIME DATE NOT NULL
+  , CREATED_AT DATE NOT NULL
   , CONSTRAINT PK_CLIENTS PRIMARY KEY (CLIENT_ID)
 ); 
 
@@ -61,7 +61,7 @@ CREATE TABLE BULLETIN_BOARD(
   , CONTENTS VARCHAR2(400) NOT NULL
   , DELETED NUMBER(1, 0) DEFAULT 0 NOT NULL
   , CREATER_ID VARCHAR2(10) NOT NULL
-  , CREATE_TIME DATE NOT NULL
+  , CREATED_AT DATE NOT NULL
   , CONSTRAINT PK_BULLETIN_BOARD PRIMARY KEY (BULLETIN_BOARD_ID)
 ); 
 
@@ -75,9 +75,9 @@ CREATE TABLE PROJECTS(
   , REMARKS VARCHAR2(800)
   , DELETED NUMBER(1, 0) DEFAULT 0 NOT NULL
   , UPDATER_ID VARCHAR2(10)
-  , UPDATE_TIME DATE
+  , UPDATED_AT DATE
   , CREATER_ID VARCHAR2(10) NOT NULL
-  , CREATE_TIME DATE NOT NULL
+  , CREATED_AT DATE NOT NULL
   , CONSTRAINT PK_PROJECTS PRIMARY KEY (PROJECT_ID)
 ); 
 
@@ -87,9 +87,9 @@ CREATE TABLE CONTRACTS(
   , STAFF_NO VARCHAR2(5) NOT NULL
   , DELETED NUMBER(1, 0) DEFAULT 0 NOT NULL
   , UPDATER_ID VARCHAR2(10)
-  , UPDATE_TIME DATE
+  , UPDATED_AT DATE
   , CREATER_ID VARCHAR2(10) NOT NULL
-  , CREATE_TIME DATE NOT NULL
+  , CREATED_AT DATE NOT NULL
   , CONSTRAINT PK_CONTRACTS PRIMARY KEY (CONTRACT_ID)
 ); 
 
@@ -107,16 +107,16 @@ CREATE TABLE CONTRACTS_TRAN(
   , REMARKS VARCHAR2(800)
   , DELETED NUMBER(1, 0) DEFAULT 0 NOT NULL
   , UPDATER_ID VARCHAR2(10)
-  , UPDATE_TIME DATE
+  , UPDATED_AT DATE
   , CREATER_ID VARCHAR2(10) NOT NULL
-  , CREATE_TIME DATE NOT NULL
+  , CREATED_AT DATE NOT NULL
   , CONSTRAINT PK_CONTRACTS_TRAN PRIMARY KEY (CONTRACT_ID, SUB_NO)
 ); 
 
 CREATE TABLE BILL_ADDRESSES( 
   BILL_ADDRESS_ID VARCHAR2(36) NOT NULL
   , CLIENT_ID VARCHAR2(120) NOT NULL
-  , SPECIFIED_FORMAT NUMBER(1, 0) DEFAULT 0 NOT NULL
+  , SPECIFIED_FORMAT_TYPE NUMBER(1, 0) DEFAULT 0 NOT NULL
   , SITE NUMBER(3, 0)
   , BILL_UNIT_TYPE NUMBER(1, 0)
   , BILL_UNIT NUMBER(3, 0) DEFAULT 0
@@ -129,24 +129,25 @@ CREATE TABLE BILL_ADDRESSES(
   , COMPANY_NAME4 VARCHAR2(100)
   , DELETED NUMBER(1, 0) DEFAULT 0 NOT NULL
   , UPDATER_ID VARCHAR2(10)
-  , UPDATE_TIME DATE
+  , UPDATED_AT DATE
   , CREATER_ID VARCHAR2(10) NOT NULL
-  , CREATE_TIME DATE NOT NULL
+  , CREATED_AT DATE NOT NULL
+  , CONSTRAINT PK_BILL_ADDRESSES PRIMARY KEY (BILL_ADDRESS_ID)
 ); 
 
 -- コメント作成（論理名）
 comment on table USERS is 'ユーザーマスタ';
-comment on column USERS.USERID is 'ユーザID';
+comment on column USERS.USER_ID is 'ユーザID';
 comment on column USERS.PASSWORD is 'パスワード';
-comment on column USERS.USERNAME is 'ユーザ名';
+comment on column USERS.USER_NAME is 'ユーザ名';
 comment on column USERS.ROLE_NAME is 'ロール名';
 comment on column USERS.LOGIN_FAILURE_COUNT is 'ログイン失敗回数';
-comment on column USERS.LOGIN_DENY_TIME is 'ログイン拒否日時';
+comment on column USERS.LOGIN_DENIED_AT is 'ログイン拒否日時';
 comment on column USERS.DELETED is '削除フラグ';
 comment on column USERS.UPDATER_ID is '更新者';
-comment on column USERS.UPDATE_TIME is '更新年月日';
+comment on column USERS.UPDATED_AT is '更新年月日';
 comment on column USERS.CREATER_ID is '登録者';
-comment on column USERS.CREATE_TIME is '登録年月日';
+comment on column USERS.CREATED_AT is '登録年月日';
 
 comment on table STAFFS is 'スタッフマスタ';
 comment on column STAFFS.STAFF_NO is 'スタッフNo';
@@ -157,9 +158,9 @@ comment on column STAFFS.BIRTH_DATE is '生年月日';
 comment on column STAFFS.JOINED_DATE is '入社年月日';
 comment on column STAFFS.DELETED is '削除フラグ';
 comment on column STAFFS.UPDATER_ID is '更新者';
-comment on column STAFFS.UPDATE_TIME is '更新年月日';
+comment on column STAFFS.UPDATED_AT is '更新年月日';
 comment on column STAFFS.CREATER_ID is '登録者';
-comment on column STAFFS.CREATE_TIME is '登録年月日';
+comment on column STAFFS.CREATED_AT is '登録年月日';
 
 comment on table CLIENTS is '取引先マスタ';
 comment on column CLIENTS.CLIENT_ID is '取引先ID';
@@ -168,16 +169,16 @@ comment on column CLIENTS.CLIENT_NAME_ABBR is '取引先略称';
 comment on column CLIENTS.SALES_STAFF_NO is '担当営業No';
 comment on column CLIENTS.DELETED is '削除フラグ';
 comment on column CLIENTS.UPDATER_ID is '更新者';
-comment on column CLIENTS.UPDATE_TIME is '更新年月日';
+comment on column CLIENTS.UPDATED_AT is '更新年月日';
 comment on column CLIENTS.CREATER_ID is '登録者';
-comment on column CLIENTS.CREATE_TIME is '登録年月日';
+comment on column CLIENTS.CREATED_AT is '登録年月日';
 
 comment on table BULLETIN_BOARD is 'お知らせ';
 comment on column BULLETIN_BOARD.BULLETIN_BOARD_ID is 'お知らせID';
 comment on column BULLETIN_BOARD.CONTENTS is '内容';
 comment on column BULLETIN_BOARD.DELETED is '削除フラグ';
 comment on column BULLETIN_BOARD.CREATER_ID is '登録者';
-comment on column BULLETIN_BOARD.CREATE_TIME is '登録年月日';
+comment on column BULLETIN_BOARD.CREATED_AT is '登録年月日';
 
 comment on table PROJECTS is '案件マスタ';
 comment on column PROJECTS.PROJECT_ID is '案件ID';
@@ -189,9 +190,9 @@ comment on column PROJECTS.OVERVIEWS is '業務内容';
 comment on column PROJECTS.REMARKS is '備考';
 comment on column PROJECTS.DELETED is '削除フラグ';
 comment on column PROJECTS.UPDATER_ID is '更新者';
-comment on column PROJECTS.UPDATE_TIME is '更新年月日';
+comment on column PROJECTS.UPDATED_AT is '更新年月日';
 comment on column PROJECTS.CREATER_ID is '登録者';
-comment on column PROJECTS.CREATE_TIME is '登録年月日';
+comment on column PROJECTS.CREATED_AT is '登録年月日';
 
 comment on table CONTRACTS is '契約ヘッダ情報';
 comment on column CONTRACTS.CONTRACT_ID is '契約ID';
@@ -199,9 +200,9 @@ comment on column CONTRACTS.PROJECT_ID is '案件ID';
 comment on column CONTRACTS.STAFF_NO is 'スタッフNo';
 comment on column CONTRACTS.DELETED is '削除フラグ';
 comment on column CONTRACTS.UPDATER_ID is '更新者';
-comment on column CONTRACTS.UPDATE_TIME is '更新年月日';
+comment on column CONTRACTS.UPDATED_AT is '更新年月日';
 comment on column CONTRACTS.CREATER_ID is '登録者';
-comment on column CONTRACTS.CREATE_TIME is '登録年月日';
+comment on column CONTRACTS.CREATED_AT is '登録年月日';
 
 comment on table CONTRACTS_TRAN is '契約トラン情報';
 comment on column CONTRACTS_TRAN.CONTRACT_ID is '契約ID';
@@ -217,14 +218,14 @@ comment on column CONTRACTS_TRAN.SHORTAGE_DEDUCTIONS_PRICE is '未達控除分単価';
 comment on column CONTRACTS_TRAN.REMARKS is '備考';
 comment on column CONTRACTS_TRAN.DELETED is '削除フラグ';
 comment on column CONTRACTS_TRAN.UPDATER_ID is '更新者';
-comment on column CONTRACTS_TRAN.UPDATE_TIME is '更新年月日';
+comment on column CONTRACTS_TRAN.UPDATED_AT is '更新年月日';
 comment on column CONTRACTS_TRAN.CREATER_ID is '登録者';
-comment on column CONTRACTS_TRAN.CREATE_TIME is '登録年月日';
+comment on column CONTRACTS_TRAN.CREATED_AT is '登録年月日';
 
 comment on table BILL_ADDRESSES is '請求先マスタ';
 comment on column BILL_ADDRESSES.BILL_ADDRESS_ID is '請求先ID';
 comment on column BILL_ADDRESSES.CLIENT_ID is '取引先ID';
-comment on column BILL_ADDRESSES.SPECIFIED_FORMAT is '客先指定';
+comment on column BILL_ADDRESSES.SPECIFIED_FORMAT_TYPE is '客先指定';
 comment on column BILL_ADDRESSES.SITE is 'サイト';
 comment on column BILL_ADDRESSES.BILL_UNIT_TYPE is '請求単位種別';
 comment on column BILL_ADDRESSES.BILL_UNIT is '請求単位';
@@ -237,7 +238,7 @@ comment on column BILL_ADDRESSES.COMPANY_NAME3 is '会社名３';
 comment on column BILL_ADDRESSES.COMPANY_NAME4 is '会社名４';
 comment on column BILL_ADDRESSES.DELETED is '削除フラグ';
 comment on column BILL_ADDRESSES.UPDATER_ID is '更新者';
-comment on column BILL_ADDRESSES.UPDATE_TIME is '更新年月日';
+comment on column BILL_ADDRESSES.UPDATED_AT is '更新年月日';
 comment on column BILL_ADDRESSES.CREATER_ID is '登録者';
-comment on column BILL_ADDRESSES.CREATE_TIME is '登録年月日';
+comment on column BILL_ADDRESSES.CREATED_AT is '登録年月日';
 

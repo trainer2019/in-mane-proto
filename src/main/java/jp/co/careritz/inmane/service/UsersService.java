@@ -1,52 +1,54 @@
 package jp.co.careritz.inmane.service;
 
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import jp.co.careritz.inmane.dao.UsersDao;
 import jp.co.careritz.inmane.dto.UsersDto;
 
 @Service
 public class UsersService {
 
-	@Autowired
-	private UsersDao dao;
-	
-	/**
-	 * ユーザ情報を取得するサービス
-	 *
-	 * @return メッセージを格納したDTO
-	 */
-	public UsersDto findByPk(String userid) {
+  @Autowired
+  private UsersDao dao;
 
-		return dao.selectOne(userid);
-	}
+  /**
+   * ユーザ情報を取得するサービス.
+   *
+   * @param userid ユーザID
+   * 
+   * @return ユーザを格納したDTO
+   */
+  public UsersDto findByPk(String userid) {
 
-	/**
-	 * ユーザ情報を取得するサービス
-	 * @param deleted 
-	 *
-	 * @return メッセージを格納したリスト
-	 */
-	public List<UsersDto> find(UsersDto dto, boolean nonDeleted) {
+    return dao.selectOne(userid);
+  }
 
-		return dao.select(dto, nonDeleted);
-	}
-	
-	/**
-	 * ユーザ情報を更新するサービス
-	 *
-	 * @param userDto メッセージを格納したリスト
-	 */
-	public int updateByPk(UsersDto dto) {
+  /**
+   * ユーザ情報を取得するサービス.
+   * 
+   * @param dto 検索条件を格納したdto
+   * @param nonDeleted 削除済を含むフラグ
+   *
+   * @return ユーザを格納したリスト
+   */
+  public List<UsersDto> find(UsersDto dto, boolean nonDeleted) {
 
-		return dao.update(dto);
-	}
+    return dao.select(dto, nonDeleted);
+  }
 
-	public int create(UsersDto dto) {
+  /**
+   * ユーザ情報を更新するサービス.
+   *
+   * @param dto ユーザを格納したリスト
+   */
+  public int updateByPk(UsersDto dto) {
 
-		return dao.create(dto);
-	}
+    return dao.update(dto);
+  }
+
+  public int create(UsersDto dto) {
+
+    return dao.create(dto);
+  }
 }

@@ -82,19 +82,7 @@
 </head>
 
 <body th:data-context-path="@{/}">
-  <main> <!--/* ローディングウィンドウ */-->
-  <div id="loading">
-    <span>
-      <i class="fa fa-spinner fa-spin"></i>
-    </span>
-  </div>
-  <!--/* ダイアログメッセージ */--> <input type="hidden" id="appCompleteMessageSuccess" th:value='${appCompleteMessageSuccess}' /> <input type="hidden" id="appCompleteMessageWarning"
-    th:value='${appCompleteMessageWarning}' /> <input type="hidden" id="appCompleteMessageFailure" th:value='${appCompleteMessageFailure}' /> <!--/* 完了メッセージフォーム */-->
-  <form id="formComplete" th:action="@{/complete}">
-    <input type="hidden" id="formCompleteUrl" name="url" />
-    <input type="hidden" id="formCompleteMessage" name="message" />
-  </form>
-
+  <main>
   <!-- contentsHeader -->
   <div th:fragment="contentsHeader">
     <contentsHeader id="contentsHeader"> <!-- Logo -->
@@ -139,7 +127,7 @@
   <div th:fragment="sideMenu">
     <sideMenu id="sideMenu">
     <div
-      th:with="menus = ${ {'TOP', '稼働状況情報', '契約情報', 'スタッフ情報', '案件管理', '取引先管理', 'ユーザー管理'} }, 
+      th:with="menus = ${ {'TOP', '稼働状況情報', '契約情報', 'スタッフ情報', '案件管理', '取引先管理', 'ユーザ管理'} }, 
                 paths = ${ {'__@{/top}__',
                             '__@{/assignments}__',
                             '__@{/contracts}__',

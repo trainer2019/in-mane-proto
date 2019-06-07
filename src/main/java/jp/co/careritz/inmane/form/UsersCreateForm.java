@@ -1,15 +1,11 @@
 package jp.co.careritz.inmane.form;
 
-import java.io.Serializable;
 import java.sql.Date;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-public class UsersCreateForm implements Serializable {
-
-  /** シリアルバージョンUID. */
-  private static final long serialVersionUID = 1L;
+public class UsersCreateForm {
 
   /** ユーザID. */
   @NotEmpty(message = "必須入力の項目です。")

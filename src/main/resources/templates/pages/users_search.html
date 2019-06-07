@@ -48,18 +48,18 @@
                   </tr>
                   <tr>
                     <td colspan="3">
-                      <input type="text" id="searchUserName" name="userName" th:field="*{userName}" placeholder="ユーザ名" maxlength="100" size="30" />
+                      <input type="text" id="searchUserName" name="userName" th:field="*{userName}" placeholder="ユーザ名" maxlength="20" size="30" />
                     </td>
                   </tr>
                   <tr>
                     <td colspan="1">
-                      <label>権限：</label>
+                      <label>ユーザ権限：</label>
                     </td>
                     <td colspan="2">
                       <input id="radioAll" type="radio" name="roleName" value="ALL" th:field="*{roleName}" checked="checked">
                       全て
                       <input id="radioUser" type="radio" name="roleName" value="USER" th:field="*{roleName}">
-                      ユーザー
+                      一般
                       <input id="radioAdmin" type="radio" name="roleName" value="ADMIN" th:field="*{roleName}">
                       管理者
                     </td>
@@ -114,7 +114,7 @@
                   <td>
                     <label class="ellipsis" th:text="${user.userName}" th:title="${user.userName}"></label>
                   </td>
-                  <td th:text="${user.roleName}"></td>
+                  <td>[[${'ADMIN'.equals(user.roleName)} ? '管理者' : (${'USER'.equals(user.roleName)} ? '一般' : 'ERROR')]]</td>
                   <td>[[${user.deleted==1} ? '済' : '']]</td>
                   <td th:text="${#dates.format(user.updatedAt, 'yyyy/MM/dd HH:mm:ss')}"></td>
                   <td th:text="${#dates.format(user.createdAt, 'yyyy/MM/dd HH:mm:ss')}"></td>

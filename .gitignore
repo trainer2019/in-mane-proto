@@ -1,6 +1,7 @@
 .gradle
 /build/
 /bin/
+/lib/
 !gradle/wrapper/gradle-wrapper.jar
 
 *.class

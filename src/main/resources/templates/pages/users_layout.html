@@ -10,7 +10,8 @@
 <body th:data-context-path="@{/}">
   <main>
   <div th:fragment="tabs">
-    <tabs id="tabs"> <!--/* ▼ タブ表示 */-->
+    <tabs id="tabs">
+    <!--/* ▼ タブ表示 */-->
     <div
       th:with="tabs  = ${ {'ユーザー検索', 'ユーザー登録'} }, 
                     paths = ${ {'__@{/maintenance/users/search}__',
@@ -22,7 +23,9 @@
                     uri   = ${#httpServletRequest.requestURI}">
       <!--/* 現在のURIを見て、タブの背景色が変わるようクラスを設定 */-->
       <p class="tabs" th:each="tabNm, status : ${tabs}">
-        <a href="#" th:class="${#strings.contains(uri, paths[__${status.index}__])} ? 'tab' : 'tab_other'" th:onclick="'window.location.href=\'' + ${toPaths[__${status.index}__]} + '\''">[[${tabNm}]]</a>
+        <a href="#" th:class="${#strings.contains(uri, paths[__${status.index}__])} ? 'tab' : 'tab_other'" 
+           th:data="${toPaths[__${status.index}__]}" 
+           th:onclick="window.location.href=this.getAttribute('data')">[[${tabNm}]]</a>
       </p>
     </div>
     <!--/* ▲ タブ表示 */--> </tabs>

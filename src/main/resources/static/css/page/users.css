@@ -34,7 +34,6 @@ table.t th {
 }
 
 table.t tr:nth-child(odd)  td {
-  background-color: #C8C8E8;
   color: #000000;
 }
 

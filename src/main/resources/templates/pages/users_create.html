@@ -48,9 +48,9 @@
       </div>
       <div class="main"
         th:with="uri      = ${#httpServletRequest.requestURI},
-                                 isNew    = ${#strings.contains(uri, '__@{/maintenance/users/new}__')},
-                                 isEdit   = ${#strings.contains(uri, '__@{/maintenance/users/edit}__')},
-                                 isDetail = ${#strings.contains(uri, '__@{/maintenance/users/detail}__')}">
+                 isNew    = ${#strings.contains(uri, '__@{/maintenance/users/new}__')},
+                 isEdit   = ${#strings.contains(uri, '__@{/maintenance/users/edit}__')},
+                 isDetail = ${#strings.contains(uri, '__@{/maintenance/users/detail}__')}">
         <div class="top">
           <!--/* ▼ タブ表示 */-->
           <div th:if="${isNew}" th:include="users_layout :: tabs"></div>
@@ -112,8 +112,8 @@
                       <input id="radioAdmin" type="radio" name="roleName" value="ADMIN" th:field="*{roleName}">
                       管理者
                     </td>
-                    <td colspan="3" th:if="${isDetail}">
-                      <label>[[*{roleName}]]</label>
+                    <td colspan="3" th:if="${isDetail}" th:with="role=*{roleName}">
+                      <label th:text="${'ADMIN'.equals(role)} ? '管理者' : (${'USER'.equals(role)} ? '一般' : 'ERROR')"></label>
                     </td>
                   </tr>
 
@@ -165,11 +165,14 @@
                     <td></td>
                     <td colspan="3" th:object="${usersCreateForm}">
                       <button th:unless="${isDetail}" type="submit">[[${isNew} ? '登録' : '更新']]</button>
-                      <button th:if="${isDetail}" type="button" th:onclick="'location.href=\''+ @{/maintenance/users/edit}+ '?userId=' + *{userId} +'\''">編集</button>
+                      <button th:if="${isDetail}" type="button" 
+                        th:data="@{/maintenance/users/edit}"
+                        th:userId="*{userId}"
+                        th:onclick="location.href=this.getAttribute('data') + '?userId=' + this.getAttribute('userId')">編集</button>
                       <button th:unless="${isNew}" type="button"
-                        th:onclick="'location.href=\''+ (
-                                           ${isDetail} ? @{/maintenance/users/search} +'?roleName=ALL&nonDeleted=true'
-                                               : @{/maintenance/users/detail} +'?userId=' + *{userId}) + '\''">戻る</button>
+                        th:data="${isDetail} ? @{/maintenance/users/search} +'?roleName=ALL&nonDeleted=true'
+                                     : @{/maintenance/users/detail} +'?userId=' + *{userId}"
+                        th:onclick="location.href=this.getAttribute('data')">戻る</button>
                     </td>
                   </tr>
                 </table>

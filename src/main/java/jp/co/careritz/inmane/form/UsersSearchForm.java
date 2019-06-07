@@ -1,16 +1,12 @@
 package jp.co.careritz.inmane.form;
 
-import java.io.Serializable;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 
 /**
  * ログインフォーム.
  */
-public class UsersSearchForm implements Serializable {
-
-  /** シリアルバージョンUID. */
-  private static final long serialVersionUID = 1L;
+public class UsersSearchForm {
 
   /** ユーザID. */
   private String userId;

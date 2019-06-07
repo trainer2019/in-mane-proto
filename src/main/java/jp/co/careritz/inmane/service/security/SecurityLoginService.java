@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.List;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -36,7 +35,7 @@ public class SecurityLoginService implements UserDetailsService {
   // ----------------------------------------------------------------------
   @Override
   public UserDetails loadUserByUsername(String userid)
-      throws UsernameNotFoundException, DataAccessException {
+      throws UsernameNotFoundException {
 
     /* ---------------------------------------------------- */
     /* ローカル変数の宣言と初期化 */

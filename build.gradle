@@ -1,6 +1,6 @@
 buildscript {
 	ext {
-		springBootVersion = '2.0.4.RELEASE'
+		springBootVersion = '2.1.5.RELEASE'
 		tomcatVersion = '9.0.10'
 	}
 	repositories {
@@ -18,7 +18,8 @@ apply plugin: 'io.spring.dependency-management'
 group = 'jp.co.careritz'
 version = '0.0.1-SNAPSHOT'
 
-sourceCompatibility = '10'
+sourceCompatibility = '11'
+targetCompatibility = '11'
 
 repositories {
 	mavenCentral()
@@ -31,8 +32,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web-services'
 	
 	// Development
-	runtimeOnly 'com.oracle.jdbc:ojdbc8:12.2.0.1'
-	runtimeOnly 'org.springframework.boot:spring-boot-devtools'
-	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.0.0'
+	compile files('lib/ojdbc8.jar')
+	compile 'org.springframework.boot:spring-boot-devtools'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
